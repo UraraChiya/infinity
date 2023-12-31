@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "infinity:block/collector",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "infinity:block/collector"
+    },
+    "facing=south": {
+      "model": "infinity:block/collector",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "infinity:block/collector",
+      "y": 270
+    }
+  }
+}
