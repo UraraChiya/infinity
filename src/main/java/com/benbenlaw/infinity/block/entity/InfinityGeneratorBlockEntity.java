@@ -5,9 +5,13 @@ import com.benbenlaw.infinity.item.ModItems;
 import com.benbenlaw.infinity.multiblock.MultiBlockManagers;
 import com.benbenlaw.infinity.networking.ModMessages;
 import com.benbenlaw.infinity.networking.packets.PacketSyncItemStackToClient;
+import com.benbenlaw.infinity.recipe.GeneratorRecipe;
 import com.benbenlaw.infinity.screen.InfinityGeneratorMenu;
 import com.benbenlaw.infinity.util.ModEnergyStorage;
 import com.benbenlaw.opolisutilities.block.entity.custom.DryingTableBlockEntity;
+import com.benbenlaw.opolisutilities.recipe.DryingTableRecipe;
+import com.benbenlaw.opolisutilities.recipe.NoInventoryRecipe;
+import com.benbenlaw.opolisutilities.recipe.SoakingTableRecipe;
 import com.benbenlaw.opolisutilities.util.inventory.IInventoryHandlingBlockEntity;
 import com.benbenlaw.opolisutilities.util.inventory.WrappedHandler;
 import net.minecraft.core.BlockPos;
@@ -28,6 +32,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
@@ -44,7 +49,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static com.benbenlaw.opolisutilities.block.custom.DryingTableBlock.WATERLOGGED;
 
 public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuProvider, IInventoryHandlingBlockEntity {
 
@@ -234,6 +242,43 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         assert level != null;
 
         if (result != null) {
+
+            for (GeneratorRecipe recipe : level.getRecipeManager().getRecipesFor(GeneratorRecipe.Type.INSTANCE, NoInventoryRecipe.INSTANCE, level)) {
+
+                String pattern = recipe.getPattern();
+
+                if (Objects.equals(result.ID(), pattern)) {
+                    if (this.itemHandler.getStackInSlot(0).is(recipe.getInputItem().getItem()) && maxProgress == 0) {
+                        itemHandler.extractItem(0, 1, false);
+                        maxProgress = recipe.getFuelDuration(); //need the one on the end for stupid reasons
+                    }
+
+                    progress++;
+
+                    if (progress < maxProgress) {
+                        this.ENERGY_STORAGE.receiveEnergy(recipe.getRFPerTick(), false);
+
+                    }
+
+                    if (progress >= maxProgress) {
+                        this.maxProgress = 0;
+                        this.progress = 0;
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+
+    public void tick() {
+
+        if (getLevel() == null) return;
+
+        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+        assert level != null;
+
+        if (result != null) {
             if (Objects.equals(result.ID(), "infinity:furnace_generator")) {
                 if (this.itemHandler.getStackInSlot(0).is(ModItems.FURNACE_GENERATOR_CORE.get()) && maxProgress == 0) {
                     itemHandler.extractItem(0, 1, false);
@@ -276,6 +321,8 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         }
     }
 
+     */
+
 
     @Nullable
     @Override
@@ -293,13 +340,4 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         super.onDataPacket(net, pkt);
     }
 
-    //Generator Checks
-
-    private void fillEnergyFurnaceGenerator() {
-        this.ENERGY_STORAGE.receiveEnergy(1, false);
-    }
-
-    private void fillEnergyEndGenerator() {
-        this.ENERGY_STORAGE.receiveEnergy(1000, false);
-    }
 }

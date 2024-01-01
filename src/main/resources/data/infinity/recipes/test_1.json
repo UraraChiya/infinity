@@ -1,0 +1,10 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:furnace_generator",
+  "input": {
+    "item": "minecraft:iron_ore",
+    "count": 1
+  },
+  "fuel_duration": 100,
+  "rf_per_tick": 1000
+}

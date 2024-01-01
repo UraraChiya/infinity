@@ -6,6 +6,7 @@ import com.benbenlaw.infinity.config.ConfigFile;
 import com.benbenlaw.infinity.item.ModCreativeTab;
 import com.benbenlaw.infinity.item.ModItems;
 import com.benbenlaw.infinity.networking.ModMessages;
+import com.benbenlaw.infinity.recipe.ModRecipes;
 import com.benbenlaw.infinity.screen.InfinityGeneratorScreen;
 import com.benbenlaw.infinity.screen.ModMenuTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -47,6 +48,7 @@ public class Infinity {
         ModBlocks.register(eventBus);
         ModBlockEntities.register(eventBus);
         ModMenuTypes.register(eventBus);
+        ModRecipes.register(eventBus);
 
         eventBus.addListener(this::setup);
         eventBus.addListener(this::enqueueIMC);
