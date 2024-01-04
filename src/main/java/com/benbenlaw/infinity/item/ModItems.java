@@ -27,6 +27,10 @@ public class ModItems {
     public static final RegistryObject<Item> HEAT_CORE = ITEMS.register("heat_core",
             () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> WET_CORE = ITEMS.register("wet_core",
+            () -> new Item(new Item.Properties()));
+
+
 
 
 

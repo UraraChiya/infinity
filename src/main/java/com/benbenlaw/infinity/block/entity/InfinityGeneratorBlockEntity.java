@@ -103,6 +103,8 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public boolean hasStructure;
     public boolean hasFuel;
     public boolean hasEnoughPowerStorageAvailable;
+    public int tickCounter = 0;
+    public int tickBeforeCheck = 50; // ticks before checking for structure again
 
     private ModEnergyStorage createEnergyStorage() {
         return new ModEnergyStorage(maxEnergyStorage, maxEnergyTransfer) {
@@ -240,12 +242,12 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         }
     }
 
-
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("infinity_generator.progress", progress);
         tag.putInt("energy", ENERGY_STORAGE.getEnergyStored());
+        tag.putInt("current_tick", tickCounter);
         super.saveAdditional(tag);
     }
 
@@ -255,6 +257,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         itemHandler.deserializeNBT(tag.getCompound("inventory"));
         progress = tag.getInt("infinity_generator.progress");
         ENERGY_STORAGE.setEnergy(tag.getInt("energy"));
+        tickCounter = tag.getInt("current_tick");
     }
 
     public void drops() {
@@ -269,8 +272,10 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
     public void tick() {
 
-        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+        tickCounter++;
 
+        if (tickCounter % tickBeforeCheck == 0) {
+        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
 
         if (result != null && input == null) {
 
@@ -295,7 +300,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
                             }
                         }
                     }
-
+                }
             }
         }
         //Running
@@ -313,9 +318,13 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         if (progress <= maxProgress) {
             level.addParticle(ParticleTypes.CRIMSON_SPORE, (double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D, 0.5D, 0.5D, 0.5D);
             level.playSound(null, this.worldPosition, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS);
-            if (result == null) {
-                resetGenerator();
-                return;
+
+            if (tickCounter % tickBeforeCheck == 0) {
+                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+                if (result == null) {
+                    resetGenerator();
+                    return;
+                }
             }
 
             this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
@@ -324,6 +333,11 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         //End on running
         if (progress >= maxProgress) {
             resetGenerator();
+        }
+        //rest tick
+        if (tickCounter >= tickBeforeCheck) {
+            tickCounter = 0;
+            System.out.println("resetting tick of generator in " + this.worldPosition + System.nanoTime());
         }
     }
 
