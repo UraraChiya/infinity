@@ -269,19 +269,17 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
     public void tick() {
 
-        assert level != null;
-
         var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
-        assert level != null;
 
-        if (result != null) {
+
+        if (result != null && input == null) {
 
             String foundPattern = result.ID();
-            if (input == null) {
                 SimpleContainer inventory = new SimpleContainer(this.itemHandler.getSlots());
                 for (int i = 0; i < this.itemHandler.getSlots(); i++) {
                     inventory.setItem(i, this.itemHandler.getStackInSlot(i));
                 }
+            assert level != null;
                 Optional<GeneratorRecipe> recipeMatch = level.getRecipeManager()
                         .getRecipeFor(GeneratorRecipe.Type.INSTANCE, inventory, level);
                 if (recipeMatch.isPresent()) {
@@ -297,7 +295,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
                             }
                         }
                     }
-                }
+
             }
         }
         //Running
