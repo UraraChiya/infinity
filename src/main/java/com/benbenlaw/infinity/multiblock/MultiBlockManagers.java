@@ -1,6 +1,7 @@
 package com.benbenlaw.infinity.multiblock;
 
 import com.benbenlaw.infinity.block.ModBlocks;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
@@ -15,8 +16,35 @@ public class MultiBlockManagers {
         POWER_MULTIBLOCKS.register("infinity:furnace_generator",
                 Generators.FURNACE,
                 BlockPatternBuilder.start()
-                        .aisle("000", "0*0", "000")
-                        .where('0', a -> a.getState().is(Blocks.FURNACE))// && a.getState().getValue(BlockStateProperties.LIT))
+                        .aisle("W0W", "0*0", "W0W")
+                        .where('0', a -> a.getState().is(Blocks.FURNACE) && a.getState().getValue(BlockStateProperties.LIT))
+                        .where('W', a -> a.getState().is(BlockTags.WALLS))
+                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                        .build()
+        );
+
+        POWER_MULTIBLOCKS.register("infinity:lava_generator",
+                Generators.LAVA,
+                BlockPatternBuilder.start()
+                        .aisle("LLL", "L*L", "LLL")
+                        .where('L', a -> a.getState().is(Blocks.LAVA))
+                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                        .build()
+        );
+
+        POWER_MULTIBLOCKS.register("infinity:gold_generator",
+                Generators.GOLD,
+                BlockPatternBuilder.start()
+                        .aisle("         ", "    G    ", "         ")
+                        .aisle("    G    ", "   GGG   ", "    G    ")
+                        .aisle("         ", "    G    ", "         ")
+                        .aisle("         ", " G     G ", "         ")
+                        .aisle(" G     G ", "GGG * GGG", " G     G ")
+                        .aisle("         ", " G     G ", "         ")
+                        .aisle("         ", "    G    ", "         ")
+                        .aisle("    G    ", "   GGG   ", "    G    ")
+                        .aisle("         ", "    G    ", "         ")
+                        .where('G', a -> a.getState().is(Blocks.GOLD_BLOCK))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .build()
         );

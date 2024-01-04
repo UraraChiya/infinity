@@ -2,9 +2,9 @@
   "type": "infinity:generator",
   "pattern": "infinity:furnace_generator",
   "input": {
-    "item": "minecraft:iron_ore",
+    "item": "minecraft:charcoal",
     "count": 1
   },
-  "fuel_duration": 100,
-  "rf_per_tick": 1000
+  "fuel_duration": 800,
+  "rf_per_tick": 50
 }

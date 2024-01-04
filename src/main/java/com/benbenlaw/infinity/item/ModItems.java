@@ -24,6 +24,9 @@ public class ModItems {
     public static final RegistryObject<Item> FURNACE_GENERATOR_CORE = ITEMS.register("furnace_generator_core",
             () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> HEAT_CORE = ITEMS.register("heat_core",
+            () -> new Item(new Item.Properties()));
+
 
 
 

@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:gold_generator",
+  "input": {
+    "item": "minecraft:gold_ingot"
+  },
+  "fuel_duration": 1000,
+  "rf_per_tick": 200
+}

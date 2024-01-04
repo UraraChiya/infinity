@@ -41,20 +41,6 @@ public class InfinityGeneratorMenu extends AbstractContainerMenu {
 
     }
 
-    public boolean isCrafting() {
-        return data.get(0) > 0 ;
-    }
-
-    public int getScaledProgress() {
-
-        int progress = this.data.get(0);
-        int maxProgress = this.data.get(0);  // Max Progress
-        int progressArrowSize = 26; // This is the height in pixels of your arrow
-
-        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
-
-    }
-
     private static final int HOTBAR_SLOT_COUNT = 9;
     private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
     private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;

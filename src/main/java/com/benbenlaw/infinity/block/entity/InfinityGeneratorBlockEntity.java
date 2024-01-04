@@ -14,12 +14,16 @@ import com.benbenlaw.opolisutilities.util.inventory.IInventoryHandlingBlockEntit
 import com.benbenlaw.opolisutilities.util.inventory.WrappedHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -30,6 +34,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
@@ -95,6 +100,9 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public int fuelDuration = 0;
     final int maxEnergyStorage = 1000000;
     final int maxEnergyTransfer = 1000000;
+    public boolean hasStructure;
+    public boolean hasFuel;
+    public boolean hasEnoughPowerStorageAvailable;
 
     private ModEnergyStorage createEnergyStorage() {
         return new ModEnergyStorage(maxEnergyStorage, maxEnergyTransfer) {
@@ -105,6 +113,17 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
             }
         };
     }
+
+    public boolean getHasStructure() {
+        return hasStructure;
+    }
+    public boolean getHasFuel() {
+        return hasStructure;
+    }
+    public boolean hasEnoughPowerStorageAvailable() {
+        return hasStructure;
+    }
+
 
     public int getProgress() {
         return progress;
@@ -252,14 +271,12 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
         assert level != null;
 
-
         var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
         assert level != null;
 
         if (result != null) {
 
             String foundPattern = result.ID();
-            System.out.println(input);
             if (input == null) {
                 SimpleContainer inventory = new SimpleContainer(this.itemHandler.getSlots());
                 for (int i = 0; i < this.itemHandler.getSlots(); i++) {
@@ -268,23 +285,18 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
                 Optional<GeneratorRecipe> recipeMatch = level.getRecipeManager()
                         .getRecipeFor(GeneratorRecipe.Type.INSTANCE, inventory, level);
                 if (recipeMatch.isPresent()) {
-                    if (itemHandler.getStackInSlot(0).is(recipeMatch.get().getInputItem().getItem().asItem())) {
 
-                        if (foundPattern.equals(recipeMatch.get().getPattern())) {
-
+                    if (foundPattern.equals(recipeMatch.get().getPattern())) {
+                        if (itemHandler.getStackInSlot(0).is(recipeMatch.get().getInputItem().getItem().asItem())) {
                             if (hasEnoughEnergyStorage(this, recipeMatch.get())) {
-
+                                //Set recipe
                                 this.input = recipeMatch.get().getInputItem();
                                 this.RFPerTick = recipeMatch.get().getRFPerTick();
                                 this.fuelDuration = recipeMatch.get().getFuelDuration();
                                 setChanged(this.level, this.worldPosition, this.getBlockState());
                             }
-
                         }
-
                     }
-
-
                 }
             }
         }
@@ -301,28 +313,33 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         progress++;
         //Whilst running
         if (progress <= maxProgress) {
+            level.addParticle(ParticleTypes.CRIMSON_SPORE, (double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D, 0.5D, 0.5D, 0.5D);
+            level.playSound(null, this.worldPosition, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS);
+            if (result == null) {
+                resetGenerator();
+                return;
+            }
+
             this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
             setChanged(this.level, this.worldPosition, this.getBlockState());
-
         }
         //End on running
         if (progress >= maxProgress) {
-            this.maxProgress = 0;
-            this.progress = 0;
-            input = null;
-            setChanged(this.level, this.worldPosition, this.getBlockState());
-
+            resetGenerator();
         }
+    }
 
+    private void resetGenerator() {
+        this.maxProgress = 0;
+        this.progress = 0;
+        this.RFPerTick = 0;
+        input = null;
+        setChanged(this.level, this.worldPosition, this.getBlockState());
     }
 
     boolean hasEnoughEnergyStorage (InfinityGeneratorBlockEntity entity, GeneratorRecipe recipe) {
         return maxEnergyStorage >= (recipe.getRFPerTick() * recipe.getFuelDuration())  + entity.getEnergyStorage().getEnergyStored();
     }
-
-
-
-    //TODO check power has space before starting recipes//
 
     @Nullable
     @Override

@@ -29,17 +29,12 @@ public class GeneratorDisplayTooltipArea {
 
     public List<Component> getTooltips() {
 
+        /*
         System.out.println("getTooltips method called. Input: " + entity.getInput());
         System.out.println("getTooltips method called. RFPerTick: " + entity.getRFPerTick());
         System.out.println("getTooltips method called. power: " + entity.getMaxProgress());
 
-
-        if (entity.getProgress() == 0 && entity.getMaxProgress() == 0) {
-            return List.of(
-                    Component.literal("Generator not running!"),
-                    Component.literal("Check structure and fuel!")
-            );
-        }
+         */
 
         if (entity.getInput() != null) {
             return List.of(
@@ -49,9 +44,7 @@ public class GeneratorDisplayTooltipArea {
         }
 
         return List.of(
-                Component.literal("null item"),
-                Component.literal("at " + (entity.getRFPerTick()) + "RF Per Tick")
-
+                Component.literal("No power being generated")
         );
     }
 
