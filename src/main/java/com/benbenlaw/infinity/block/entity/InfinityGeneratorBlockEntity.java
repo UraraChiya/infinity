@@ -8,10 +8,7 @@ import com.benbenlaw.infinity.networking.packets.PacketSyncItemStackToClient;
 import com.benbenlaw.infinity.recipe.GeneratorRecipe;
 import com.benbenlaw.infinity.screen.InfinityGeneratorMenu;
 import com.benbenlaw.infinity.util.ModEnergyStorage;
-import com.benbenlaw.opolisutilities.block.entity.custom.DryingTableBlockEntity;
-import com.benbenlaw.opolisutilities.recipe.DryingTableRecipe;
 import com.benbenlaw.opolisutilities.recipe.NoInventoryRecipe;
-import com.benbenlaw.opolisutilities.recipe.SoakingTableRecipe;
 import com.benbenlaw.opolisutilities.util.inventory.IInventoryHandlingBlockEntity;
 import com.benbenlaw.opolisutilities.util.inventory.WrappedHandler;
 import net.minecraft.core.BlockPos;
@@ -22,8 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -31,6 +26,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -90,23 +86,37 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     private LazyOptional<IEnergyStorage> lazyEnergyHandler = LazyOptional.empty();
 
     protected final ContainerData data;
-    private int progress = 0;
-    private int maxProgress = 0;
-    private int fuelLevel = 0;
-
-    private int ticksSinceLastConsumption = 0;
-
-
-    private final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
+    public int progress;
+    public int maxProgress;
+    public ItemStack input;
+    public final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
+    public int RFPerTick;
+    public int fuelDuration = 0;
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(1000000, 1000) {
+        return new ModEnergyStorage(1000000, 100000) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
                 getLevel().sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
         };
+    }
+
+    public int getProgress() {
+        return progress;
+    }
+
+    public int getMaxProgress() {
+        return maxProgress;
+    }
+
+    public ItemStack getInput() {
+        return input;
+    }
+
+    public int getRFPerTick() {
+        return RFPerTick;
     }
 
     @Override
@@ -124,7 +134,6 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         return this.ENERGY_STORAGE;
     }
 
-    @Override
     public ItemStackHandler getItemStackHandler() {
         return this.itemHandler;
     }
@@ -134,21 +143,22 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         this.data = new ContainerData() {
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> InfinityGeneratorBlockEntity.this.progress;
-                    case 1 -> InfinityGeneratorBlockEntity.this.maxProgress;
+                    case 0 -> progress;
+                    case 1 -> maxProgress;
                     default -> 0;
                 };
             }
 
             public void set(int index, int value) {
                 switch (index) {
-                    case 0 -> InfinityGeneratorBlockEntity.this.progress = value;
-                    case 1 -> InfinityGeneratorBlockEntity.this.maxProgress = value;
+                    case 0 -> progress = value;
+                    case 1 -> maxProgress = value;
                 }
             }
 
             public int getCount() {
-                return 2;
+                return 1; //Change to 1 from 2 to fix log spam not sure why it causes spam though
+
             }
         };
     }
@@ -200,13 +210,14 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public void invalidateCaps()  {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        lazyEnergyHandler.invalidate();
         for (Direction dir : Direction.values()) {
             if(directionWrappedHandlerMap.containsKey(dir)) {
                 directionWrappedHandlerMap.get(dir).invalidate();
             }
         }
-        lazyEnergyHandler.invalidate();
     }
+
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
@@ -236,93 +247,59 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
     public void tick() {
 
-        if (getLevel() == null) return;
-
-        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
         assert level != null;
+        if (!level.isClientSide()) {
 
-        if (result != null) {
+            var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+            assert level != null;
 
-            for (GeneratorRecipe recipe : level.getRecipeManager().getRecipesFor(GeneratorRecipe.Type.INSTANCE, NoInventoryRecipe.INSTANCE, level)) {
+            if (result != null) {
 
-                String pattern = recipe.getPattern();
+                if (input == null) {
+                    for (GeneratorRecipe recipe : level.getRecipeManager().getRecipesFor(GeneratorRecipe.Type.INSTANCE, NoInventoryRecipe.INSTANCE, level)) {
+                        String pattern = recipe.getPattern();
+                        ItemStack selectedRecipeItem = recipe.getInputItem();
 
-                if (Objects.equals(result.ID(), pattern)) {
-                    if (this.itemHandler.getStackInSlot(0).is(recipe.getInputItem().getItem()) && maxProgress == 0) {
-                        itemHandler.extractItem(0, 1, false);
-                        maxProgress = recipe.getFuelDuration(); //need the one on the end for stupid reasons
+                        if (Objects.equals(result.ID(), pattern) && selectedRecipeItem.is(itemHandler.getStackInSlot(0).getItem())) {
+
+                            this.input = selectedRecipeItem;
+                            this.RFPerTick = recipe.getRFPerTick();
+                            this.fuelDuration = recipe.getFuelDuration();
+                            break;
+                        }
                     }
+                }
 
-                    progress++;
+                if (input != null && RFPerTick != 0 && fuelDuration != 0) {
 
-                    if (progress < maxProgress) {
-                        this.ENERGY_STORAGE.receiveEnergy(recipe.getRFPerTick(), false);
-
-                    }
-
-                    if (progress >= maxProgress) {
-                        this.maxProgress = 0;
+                    //set running
+                    if (this.itemHandler.getStackInSlot(0).is(input.getItem()) && maxProgress == 0) {
+                        this.itemHandler.extractItem(0, 1, false);
+                        this.maxProgress = fuelDuration;
                         this.progress = 0;
                     }
                 }
+
+                progress++;
+
+                //Whilst running
+                if (progress <= maxProgress) {
+                    this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
+                }
+
+                //End on running
+                if (progress >= maxProgress) {
+                    this.maxProgress = 0;
+                    this.progress = 0;
+                    this.input = null;
+                }
             }
         }
     }
 
-    /*
 
-    public void tick() {
 
-        if (getLevel() == null) return;
-
-        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
-        assert level != null;
-
-        if (result != null) {
-            if (Objects.equals(result.ID(), "infinity:furnace_generator")) {
-                if (this.itemHandler.getStackInSlot(0).is(ModItems.FURNACE_GENERATOR_CORE.get()) && maxProgress == 0) {
-                    itemHandler.extractItem(0, 1, false);
-                    maxProgress = 1001; //need the one on the end for stupid reasons
-                }
-
-                progress++;
-
-                if (progress < maxProgress) {
-                    fillEnergyFurnaceGenerator();
-                }
-
-                if (progress >= maxProgress) {
-                    this.maxProgress = 0;
-                    this.progress = 0;
-                }
-            }
-
-            if (Objects.equals(result.ID(), "infinity:end_bricks")) {
-                if (this.itemHandler.getStackInSlot(0).is(Items.END_CRYSTAL) && maxProgress == 0) {
-                    itemHandler.extractItem(0, 1, false);
-                    maxProgress = 5001; //need the one on the end for stupid reasons
-                }
-
-                progress++;
-
-                if (progress < maxProgress) {
-                    fillEnergyEndGenerator();
-                }
-
-                if (progress >= maxProgress) {
-                    this.maxProgress = 0;
-                    this.progress = 0;
-                }
-            }
-        }
-        else {
-        //    level.playSound(null, this.worldPosition, SoundEvents.TNT_PRIMED, SoundSource.BLOCKS);
-
-        }
-    }
-
-     */
-
+    //TODO check power has space before starting recipes//
 
     @Nullable
     @Override

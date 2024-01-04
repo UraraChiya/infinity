@@ -9,9 +9,9 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.energy.EnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGeneratorMenu> {
@@ -19,6 +19,8 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
             new ResourceLocation(Infinity.MOD_ID,"textures/gui/infinity_generator_gui.png");
 
     private EnergyDisplayTooltipArea energyInfoArea;
+    private GeneratorDisplayTooltipArea generatorInfoArea;
+
 
     public InfinityGeneratorScreen(InfinityGeneratorMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
@@ -28,9 +30,8 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
     protected void init() {
         super.init();
         assignEnergyInfoArea();
+        assignGeneratorInfoArea();
     }
-
-
 
     @Override
     protected void renderLabels(GuiGraphics guiGraphics, int pMouseX, int pMouseY) {
@@ -38,6 +39,7 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
         int y = (height - imageHeight) / 2;
 
         renderEnergyAreaTooltip(guiGraphics, pMouseX, pMouseY, x, y);
+        renderInformationTooltip(guiGraphics, pMouseX, pMouseY, x, y);
     }
 
     private void renderEnergyAreaTooltip(GuiGraphics guiGraphics, int pMouseX, int pMouseY, int x, int y) {
@@ -47,9 +49,22 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
         }
     }
 
+    private void renderInformationTooltip(GuiGraphics guiGraphics, int pMouseX, int pMouseY, int x, int y) {
+        if(isMouseAboveArea(pMouseX, pMouseY, x, y, 80, 61, 16, 16)) {
+            guiGraphics.renderTooltip(this.font, generatorInfoArea.getTooltips(),
+                    Optional.empty(), pMouseX - x, pMouseY - y);
+        }
+    }
+
+
     private void assignEnergyInfoArea() {
         energyInfoArea = new EnergyDisplayTooltipArea(((width - imageWidth) / 2) + 156,
                 ((height - imageHeight) / 2) + 11, menu.blockEntity.getEnergyStorage());
+    }
+
+    private void assignGeneratorInfoArea() {
+        generatorInfoArea = new GeneratorDisplayTooltipArea(((width - imageWidth) / 2) + 156,
+                ((height - imageHeight) / 2) + 11, menu.blockEntity);
     }
 
     @Override
@@ -62,13 +77,10 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
 
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
-        if(menu.isCrafting()) {
-            guiGraphics.blit(TEXTURE, x + 83, y + 12, 176, 0, 8, menu.getScaledProgress());
-        }
+      //  renderProgressArrow(guiGraphics, x, y);
 
         energyInfoArea.render(guiGraphics);
-
-
+        generatorInfoArea.render(guiGraphics);
     }
 
     @Override
@@ -78,6 +90,13 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
         renderTooltip(guiGraphics, mouseX, mouseY);
 
     }
+
+    private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
+        if(menu.isCrafting()) {
+            guiGraphics.blit(TEXTURE, x + 85, y + 30, 176, 0, 8, menu.getScaledProgress());
+        }
+    }
+
 
     private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int offsetX, int offsetY, int width, int height) {
         return MouseUtil.isMouseOver(pMouseX, pMouseY, x + offsetX, y + offsetY, width, height);

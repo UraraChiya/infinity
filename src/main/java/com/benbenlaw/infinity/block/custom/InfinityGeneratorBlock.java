@@ -29,7 +29,6 @@ public class InfinityGeneratorBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-
     /* FACING */
 
     @Override
