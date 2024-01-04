@@ -80,7 +80,6 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
       //  renderProgressArrow(guiGraphics, x, y);
 
         energyInfoArea.render(guiGraphics);
-        generatorInfoArea.render(guiGraphics);
     }
 
     @Override
@@ -90,13 +89,6 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
         renderTooltip(guiGraphics, mouseX, mouseY);
 
     }
-
-    private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
-        if(menu.isCrafting()) {
-            guiGraphics.blit(TEXTURE, x + 85, y + 30, 176, 0, 8, menu.getScaledProgress());
-        }
-    }
-
 
     private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int offsetX, int offsetY, int width, int height) {
         return MouseUtil.isMouseOver(pMouseX, pMouseY, x + offsetX, y + offsetY, width, height);

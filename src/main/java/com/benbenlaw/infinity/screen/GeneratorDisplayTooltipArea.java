@@ -16,25 +16,23 @@ import java.util.List;
  *  Slightly Modified Version by: Kaupenjoe
  */
 public class GeneratorDisplayTooltipArea {
-    private final int xPos;
-    private final int yPos;
-    private final int width;
-    private final int height;
+
     private final InfinityGeneratorBlockEntity entity;
 
     public GeneratorDisplayTooltipArea(int xMin, int yMin, InfinityGeneratorBlockEntity entity)  {
-        this(xMin, yMin, entity,8,64);
+        this(entity);
     }
 
-    public GeneratorDisplayTooltipArea(int xMin, int yMin, InfinityGeneratorBlockEntity entity, int width, int height)  {
-        xPos = xMin;
-        yPos = yMin;
-        this.width = width;
-        this.height = height;
+    public GeneratorDisplayTooltipArea(InfinityGeneratorBlockEntity entity)  {
         this.entity = entity;
     }
 
     public List<Component> getTooltips() {
+
+        System.out.println("getTooltips method called. Input: " + entity.getInput());
+        System.out.println("getTooltips method called. RFPerTick: " + entity.getRFPerTick());
+        System.out.println("getTooltips method called. power: " + entity.getMaxProgress());
+
 
         if (entity.getProgress() == 0 && entity.getMaxProgress() == 0) {
             return List.of(
@@ -57,9 +55,4 @@ public class GeneratorDisplayTooltipArea {
         );
     }
 
-    public void render(GuiGraphics guiGraphics) {
-        int stored = (int)(height * (entity.getEnergyStorage().getEnergyStored() / (float)entity.getEnergyStorage().getMaxEnergyStored()));
-        guiGraphics.fillGradient(xPos,yPos + (height - stored),xPos + width,
-                yPos + height,0xffb51500, 0xff600b00);
-    }
 }

@@ -8,6 +8,7 @@ import com.benbenlaw.infinity.networking.packets.PacketSyncItemStackToClient;
 import com.benbenlaw.infinity.recipe.GeneratorRecipe;
 import com.benbenlaw.infinity.screen.InfinityGeneratorMenu;
 import com.benbenlaw.infinity.util.ModEnergyStorage;
+import com.benbenlaw.opolisutilities.recipe.DryingTableRecipe;
 import com.benbenlaw.opolisutilities.recipe.NoInventoryRecipe;
 import com.benbenlaw.opolisutilities.util.inventory.IInventoryHandlingBlockEntity;
 import com.benbenlaw.opolisutilities.util.inventory.WrappedHandler;
@@ -92,9 +93,11 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
     public int RFPerTick;
     public int fuelDuration = 0;
+    final int maxEnergyStorage = 1000000;
+    final int maxEnergyTransfer = 1000000;
 
     private ModEnergyStorage createEnergyStorage() {
-        return new ModEnergyStorage(1000000, 100000) {
+        return new ModEnergyStorage(maxEnergyStorage, maxEnergyTransfer) {
             @Override
             public void onEnergyChanged() {
                 setChanged();
@@ -192,7 +195,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         if (cap == ForgeCapabilities.ENERGY) {
             return lazyEnergyHandler.cast();
         }
-        if(cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
             return directionWrappedHandlerMap.get(side).cast();
         }
 
@@ -207,12 +210,12 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     }
 
     @Override
-    public void invalidateCaps()  {
+    public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
         lazyEnergyHandler.invalidate();
         for (Direction dir : Direction.values()) {
-            if(directionWrappedHandlerMap.containsKey(dir)) {
+            if (directionWrappedHandlerMap.containsKey(dir)) {
                 directionWrappedHandlerMap.get(dir).invalidate();
             }
         }
@@ -248,53 +251,73 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public void tick() {
 
         assert level != null;
-        if (!level.isClientSide()) {
 
-            var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
-            assert level != null;
 
-            if (result != null) {
+        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+        assert level != null;
 
-                if (input == null) {
-                    for (GeneratorRecipe recipe : level.getRecipeManager().getRecipesFor(GeneratorRecipe.Type.INSTANCE, NoInventoryRecipe.INSTANCE, level)) {
-                        String pattern = recipe.getPattern();
-                        ItemStack selectedRecipeItem = recipe.getInputItem();
+        if (result != null) {
 
-                        if (Objects.equals(result.ID(), pattern) && selectedRecipeItem.is(itemHandler.getStackInSlot(0).getItem())) {
+            String foundPattern = result.ID();
+            System.out.println(input);
+            if (input == null) {
+                SimpleContainer inventory = new SimpleContainer(this.itemHandler.getSlots());
+                for (int i = 0; i < this.itemHandler.getSlots(); i++) {
+                    inventory.setItem(i, this.itemHandler.getStackInSlot(i));
+                }
+                Optional<GeneratorRecipe> recipeMatch = level.getRecipeManager()
+                        .getRecipeFor(GeneratorRecipe.Type.INSTANCE, inventory, level);
+                if (recipeMatch.isPresent()) {
+                    if (itemHandler.getStackInSlot(0).is(recipeMatch.get().getInputItem().getItem().asItem())) {
 
-                            this.input = selectedRecipeItem;
-                            this.RFPerTick = recipe.getRFPerTick();
-                            this.fuelDuration = recipe.getFuelDuration();
-                            break;
+                        if (foundPattern.equals(recipeMatch.get().getPattern())) {
+
+                            if (hasEnoughEnergyStorage(this, recipeMatch.get())) {
+
+                                this.input = recipeMatch.get().getInputItem();
+                                this.RFPerTick = recipeMatch.get().getRFPerTick();
+                                this.fuelDuration = recipeMatch.get().getFuelDuration();
+                                setChanged(this.level, this.worldPosition, this.getBlockState());
+                            }
+
                         }
+
                     }
-                }
 
-                if (input != null && RFPerTick != 0 && fuelDuration != 0) {
 
-                    //set running
-                    if (this.itemHandler.getStackInSlot(0).is(input.getItem()) && maxProgress == 0) {
-                        this.itemHandler.extractItem(0, 1, false);
-                        this.maxProgress = fuelDuration;
-                        this.progress = 0;
-                    }
-                }
-
-                progress++;
-
-                //Whilst running
-                if (progress <= maxProgress) {
-                    this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
-                }
-
-                //End on running
-                if (progress >= maxProgress) {
-                    this.maxProgress = 0;
-                    this.progress = 0;
-                    this.input = null;
                 }
             }
         }
+        //Running
+        if (input != null && RFPerTick != 0 && fuelDuration != 0) {
+            if (this.itemHandler.getStackInSlot(0).is(input.getItem()) && maxProgress == 0) {
+                this.itemHandler.extractItem(0, 1, false);
+                this.maxProgress = fuelDuration;
+                this.progress = 0;
+                setChanged(this.level, this.worldPosition, this.getBlockState());
+
+            }
+        }
+        progress++;
+        //Whilst running
+        if (progress <= maxProgress) {
+            this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
+            setChanged(this.level, this.worldPosition, this.getBlockState());
+
+        }
+        //End on running
+        if (progress >= maxProgress) {
+            this.maxProgress = 0;
+            this.progress = 0;
+            input = null;
+            setChanged(this.level, this.worldPosition, this.getBlockState());
+
+        }
+
+    }
+
+    boolean hasEnoughEnergyStorage (InfinityGeneratorBlockEntity entity, GeneratorRecipe recipe) {
+        return maxEnergyStorage >= (recipe.getRFPerTick() * recipe.getFuelDuration())  + entity.getEnergyStorage().getEnergyStored();
     }
 
 

@@ -1,12 +1,12 @@
 package com.benbenlaw.infinity.recipe;
 
 import com.benbenlaw.infinity.Infinity;
-import com.benbenlaw.opolisutilities.recipe.NoInventoryRecipe;
 import com.google.gson.JsonObject;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public class GeneratorRecipe implements Recipe<NoInventoryRecipe> {
+public class GeneratorRecipe implements Recipe<SimpleContainer> {
 
     private final ResourceLocation id;
     private final String pattern;
@@ -48,12 +48,16 @@ public class GeneratorRecipe implements Recipe<NoInventoryRecipe> {
     }
 
     @Override
-    public boolean matches(@NotNull NoInventoryRecipe inv, @NotNull Level pLevel) {
-        return true;
+    public boolean matches(@NotNull SimpleContainer inventory, @NotNull Level pLevel) {
+
+        if(inputItem.is(inventory.getItem(0).getItem().asItem())) {
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull NoInventoryRecipe inv, RegistryAccess p_267165_) {
+    public @NotNull ItemStack assemble(@NotNull SimpleContainer inv, RegistryAccess p_267165_) {
         return ItemStack.EMPTY;
     }
 
