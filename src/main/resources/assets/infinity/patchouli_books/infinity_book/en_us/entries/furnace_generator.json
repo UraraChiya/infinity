@@ -1,0 +1,27 @@
+{
+    "name": "Furnace Generator",
+    "icon": "minecraft:textures/block/furnace.png",
+    "category": "infinity:multiblocks",
+    "sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Furnace Generator uses the heat from adjacent Furnaces to produce RF.$(br2)Furnaces must be smelting!$(br2)Any wall can be used in this Multi-Block.$(br2)JEI will show what fuels are allowed in the Furnace Generator."
+        },
+        {
+             "type": "multiblock",
+             "name": "Furnace Generator",
+             "multiblock": {
+                 "pattern": [
+                    ["WOW", "O0O", "WOW"]
+                 ],
+             "mapping": {
+                 "W": "#minecraft:walls",
+                 "0": "infinity:infinity_generator",
+                 "O": "minecraft:furnace"
+                 }
+             },
+             "text": "Furnace Generator"
+        }
+    ]
+}
