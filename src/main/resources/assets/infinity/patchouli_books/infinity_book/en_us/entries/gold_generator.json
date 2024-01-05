@@ -1,0 +1,34 @@
+{
+    "name": "Gold Generator",
+    "icon": "minecraft:textures/item/gold_ingot.png",
+    "category": "infinity:multiblocks",
+    "sortnum": 3,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Gold Generator uses Golden items to produce RF.$(br2)Requires Gold Items inside the Infinity Generator!$(br2)Uses a lot of Gold Blocks in the Multi-Block.$(br2)JEI will show what fuels are allowed in the Gold Generator."
+        },
+        {
+             "type": "multiblock",
+             "name": "Gold Generator",
+             "multiblock": {
+                 "pattern": [
+                    ["         ", "    G    ", "         "],
+                    ["    G    ", "   GGG   ", "    G    "],
+                    ["         ", "    G    ", "         "],
+                    ["         ", " G     G ", "         "],
+                    [" G     G ", "GGG 0 GGG", " G     G "],
+                    ["         ", " G     G ", "         "],
+                    ["         ", "    G    ", "         "],
+                    ["    G    ", "   GGG   ", "    G    "],
+                    ["         ", "    G    ", "         "]
+                 ],
+             "mapping": {
+                 "G": "minecraft:gold_block",
+                 "0": "infinity:infinity_generator"
+                 }
+             },
+             "text": "Gold Generator"
+        }
+    ]
+}

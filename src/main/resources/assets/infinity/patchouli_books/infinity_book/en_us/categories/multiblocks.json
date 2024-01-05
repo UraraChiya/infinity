@@ -1,0 +1,6 @@
+{
+	"name": "Multiblocks",
+	"description": "Various different multiblocks can be created to use different items to produce RF.",
+	"icon": "infinity:infinity_generator",
+	"sortnum": 2
+}

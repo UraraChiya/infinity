@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:steam_generator",
+  "input": {
+    "item": "minecraft:coal"
+  },
+  "fuel_duration": 1600,
+  "rf_per_tick": 25
+}

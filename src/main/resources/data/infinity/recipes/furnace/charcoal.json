@@ -2,8 +2,7 @@
   "type": "infinity:generator",
   "pattern": "infinity:furnace_generator",
   "input": {
-    "item": "minecraft:charcoal",
-    "count": 1
+    "item": "minecraft:charcoal"
   },
   "fuel_duration": 800,
   "rf_per_tick": 50

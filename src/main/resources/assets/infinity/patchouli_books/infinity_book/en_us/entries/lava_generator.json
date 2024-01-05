@@ -1,0 +1,26 @@
+{
+    "name": "Lava Generator",
+    "icon": "minecraft:textures/item/lava_bucket.png",
+    "category": "infinity:multiblocks",
+    "sortnum": 2,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Lava Generator uses the heat from adjacent Lava Source Blocks to produce RF.$(br2)Requires Heat Cores inside the Infinity Generator!$(br2)All Lava must be source blocks in this Multi-Block.$(br2)JEI will show what fuels are allowed in the Lava Generator."
+        },
+        {
+             "type": "multiblock",
+             "name": "Lava Generator",
+             "multiblock": {
+                 "pattern": [
+                    ["LLL", "L0L", "LLL"]
+                 ],
+             "mapping": {
+                 "L": "minecraft:lava",
+                 "0": "infinity:infinity_generator"
+                 }
+             },
+             "text": "Lava Generator"
+        }
+    ]
+}

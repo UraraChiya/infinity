@@ -1,10 +1,10 @@
 package com.benbenlaw.infinity.multiblock;
 
 public enum Generators {
-    TIER_1,
-    FURNACE,
-    LAVA,
-    GOLD,
-    BLOOD_MAGIC_ALTAR,
-    END_BRICKS
+    FURNACE, // Vanilla
+    LAVA, // Vanilla
+    GOLD, // Vanilla
+    BLOOD_MAGIC_ALTAR, // Blood Magic Mod
+    STONEOPOLIS, //Stoneopolis Modpack
+    STEAM // Vanilla
 }

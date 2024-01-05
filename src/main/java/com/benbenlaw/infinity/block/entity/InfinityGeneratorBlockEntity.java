@@ -102,6 +102,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public int fuelDuration = 0;
     final int maxEnergyStorage = 1000000;
     final int maxEnergyTransfer = 1000000;
+    public int maxTransferPerTick = 0;
     public boolean hasStructure;
     public boolean hasFuel;
     public boolean hasEnoughPowerStorageAvailable;
@@ -250,6 +251,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         tag.putInt("infinity_generator.progress", progress);
         tag.putInt("energy", ENERGY_STORAGE.getEnergyStored());
         tag.putInt("current_tick", tickCounter);
+        tag.putInt("maxTransferPerTick", maxTransferPerTick);
         super.saveAdditional(tag);
     }
 
@@ -260,6 +262,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         progress = tag.getInt("infinity_generator.progress");
         ENERGY_STORAGE.setEnergy(tag.getInt("energy"));
         tickCounter = tag.getInt("current_tick");
+        maxTransferPerTick = tag.getInt("maxTransferPerTick");
     }
 
     public void drops() {
@@ -274,152 +277,168 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
     public void tick() {
 
-        tickCounter++;
+        if (level == null) {
+            return;
+        }
 
-        if (tickCounter % tickBeforeCheck == 0) {
-        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+        if (!level.isClientSide) {
+            return;
+        }
 
-        if (result != null && input == null) {
+            tickCounter++;
 
-            String foundPattern = result.ID();
-                SimpleContainer inventory = new SimpleContainer(this.itemHandler.getSlots());
-                for (int i = 0; i < this.itemHandler.getSlots(); i++) {
-                    inventory.setItem(i, this.itemHandler.getStackInSlot(i));
-                }
-            assert level != null;
-                Optional<GeneratorRecipe> recipeMatch = level.getRecipeManager()
-                        .getRecipeFor(GeneratorRecipe.Type.INSTANCE, inventory, level);
-                if (recipeMatch.isPresent()) {
+            if (tickCounter % tickBeforeCheck == 0) {
+                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
 
-                    if (foundPattern.equals(recipeMatch.get().getPattern())) {
-                        if (itemHandler.getStackInSlot(0).is(recipeMatch.get().getInputItem().getItem().asItem())) {
-                            if (hasEnoughEnergyStorage(this, recipeMatch.get())) {
+                System.out.println("input " + input);
+
+                if (result != null && input == null) {
+
+                    String foundPattern = result.ID();
+                    SimpleContainer inventory = new SimpleContainer(this.itemHandler.getSlots());
+                    for (int i = 0; i < this.itemHandler.getSlots(); i++) {
+                        inventory.setItem(i, this.itemHandler.getStackInSlot(i));
+                    }
+                    assert level != null;
+
+                    for (GeneratorRecipe recipe : level.getRecipeManager().getAllRecipesFor(GeneratorRecipe.Type.INSTANCE)) {
+                        String patternInRecipe = recipe.getPattern();
+                        ItemStack inputItemInRecipe = recipe.getInputItem();
+
+
+                        if (foundPattern.equals(patternInRecipe) &&
+                                itemHandler.getStackInSlot(0).is(inputItemInRecipe.getItem().asItem())) {
+
+                            if (hasEnoughEnergyStorage(this, recipe)) {
                                 //Set recipe
-                                this.input = recipeMatch.get().getInputItem();
-                                this.RFPerTick = recipeMatch.get().getRFPerTick();
-                                this.fuelDuration = recipeMatch.get().getFuelDuration();
+                                this.input = recipe.getInputItem();
+                                this.RFPerTick = recipe.getRFPerTick();
+                                this.fuelDuration = recipe.getFuelDuration();
+                                this.maxTransferPerTick = recipe.getRFPerTick();
                                 setChanged(this.level, this.worldPosition, this.getBlockState());
+                                break;
                             }
                         }
                     }
                 }
             }
-        }
-        //Running
-        if (input != null && RFPerTick != 0 && fuelDuration != 0) {
-            if (this.itemHandler.getStackInSlot(0).is(input.getItem()) && maxProgress == 0) {
-                this.itemHandler.extractItem(0, 1, false);
-                this.maxProgress = fuelDuration;
-                this.progress = 0;
-                setChanged(this.level, this.worldPosition, this.getBlockState());
+            //Running
+            if (input != null && RFPerTick != 0 && fuelDuration != 0) {
+                if (this.itemHandler.getStackInSlot(0).is(input.getItem()) && maxProgress == 0) {
+                    this.itemHandler.extractItem(0, 1, false);
+                    this.maxProgress = fuelDuration;
+                    this.progress = 0;
+                    assert this.level != null;
+                    setChanged(this.level, this.worldPosition, this.getBlockState());
 
+                }
             }
-        }
-        progress++;
-        //Whilst running
-        if (progress <= maxProgress) {
-            level.addParticle(ParticleTypes.CRIMSON_SPORE, (double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D, 0.5D, 0.5D, 0.5D);
-            level.playSound(null, this.worldPosition, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS);
+            progress++;
+            //Whilst running
+            if (progress <= maxProgress) {
+                assert level != null;
+                level.addParticle(ParticleTypes.INSTANT_EFFECT, (double) this.worldPosition.getX() + 0.5D, (double) this.worldPosition.getY() + 0.5D, (double) this.worldPosition.getZ() + 0.5D, 0.5D, 0.5D, 0.5D);
+                level.playSound(null, this.worldPosition, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3F, 4.0F / (level.random.nextFloat() * 0.4F + 0.8F));
 
-            if (tickCounter % tickBeforeCheck == 0) {
-                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
-                if (result == null) {
-                    resetGenerator();
-                    return;
+                if (tickCounter % tickBeforeCheck == 0) {
+                    var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+                    if (result == null) {
+                        resetGenerator();
+                        return;
+                    }
+                }
+
+                this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
+                setChanged(this.level, this.worldPosition, this.getBlockState());
+            }
+            //End on running
+            if (progress >= maxProgress) {
+                resetGenerator();
+            }
+            //reset tick
+            if (tickCounter >= tickBeforeCheck) {
+                tickCounter = 0;
+                //   System.out.println("resetting tick of generator in " + this.worldPosition + System.nanoTime());
+            }
+
+            BlockPos abovePos = this.worldPosition.above();
+            BlockPos belowPos = this.worldPosition.below();
+            BlockPos eastPos = this.worldPosition.east();
+            BlockPos westPos = this.worldPosition.west();
+            BlockPos southPos = this.worldPosition.south();
+            BlockPos northPos = this.worldPosition.north();
+            assert level != null;
+
+            if (level.getBlockState(abovePos).getBlock() != Blocks.AIR) {
+                if (level.getBlockEntity(abovePos) != null) {
+                    BlockEntity powerBlockEntity = level.getBlockEntity(abovePos);
+                    assert powerBlockEntity != null;
+                    powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.DOWN).ifPresent(handler -> {
+                        if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                            handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(maxTransferPerTick, false), false);
+                        }
+                    });
                 }
             }
 
-            this.ENERGY_STORAGE.receiveEnergy(RFPerTick, false);
-            setChanged(this.level, this.worldPosition, this.getBlockState());
-        }
-        //End on running
-        if (progress >= maxProgress) {
-            resetGenerator();
-        }
-        //restet tick
-        if (tickCounter >= tickBeforeCheck) {
-            tickCounter = 0;
-         //   System.out.println("resetting tick of generator in " + this.worldPosition + System.nanoTime());
-        }
-
-        BlockPos abovePos = this.worldPosition.above();
-        BlockPos belowPos = this.worldPosition.below();
-        BlockPos eastPos = this.worldPosition.east();
-        BlockPos westPos = this.worldPosition.west();
-        BlockPos southPos = this.worldPosition.south();
-        BlockPos northPos = this.worldPosition.north();
-        assert level != null;
-
-        if (level.getBlockState(abovePos).getBlock() != Blocks.AIR) {
-            if(level.getBlockEntity(abovePos) != null) {
-                BlockEntity powerBlockEntity = level.getBlockEntity(abovePos);
-                assert powerBlockEntity != null;
-                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.DOWN).ifPresent(handler -> {
-                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
-                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
-                    }
-                });
+            if (level.getBlockState(belowPos).getBlock() != Blocks.AIR) {
+                if (level.getBlockEntity(belowPos) != null) {
+                    BlockEntity powerBlockEntity = level.getBlockEntity(belowPos);
+                    assert powerBlockEntity != null;
+                    powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.UP).ifPresent(handler -> {
+                        if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                            handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(maxTransferPerTick, false), false);
+                        }
+                    });
+                }
             }
-        }
+            if (level.getBlockState(eastPos).getBlock() != Blocks.AIR) {
+                if (level.getBlockEntity(eastPos) != null) {
+                    BlockEntity powerBlockEntity = level.getBlockEntity(eastPos);
+                    assert powerBlockEntity != null;
+                    powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.WEST).ifPresent(handler -> {
+                        if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                            handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(maxTransferPerTick, false), false);
+                        }
+                    });
+                }
+            }
 
-        if (level.getBlockState(belowPos).getBlock() != Blocks.AIR) {
-            if(level.getBlockEntity(belowPos) != null) {
-                BlockEntity powerBlockEntity = level.getBlockEntity(belowPos);
-                assert powerBlockEntity != null;
-                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.UP).ifPresent(handler -> {
-                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
-                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
-                    }
-                });
+            if (level.getBlockState(westPos).getBlock() != Blocks.AIR) {
+                if (level.getBlockEntity(westPos) != null) {
+                    BlockEntity powerBlockEntity = level.getBlockEntity(westPos);
+                    assert powerBlockEntity != null;
+                    powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.EAST).ifPresent(handler -> {
+                        if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                            handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(maxTransferPerTick, false), false);
+                        }
+                    });
+                }
             }
-        }
-        if (level.getBlockState(eastPos).getBlock() != Blocks.AIR) {
-            if(level.getBlockEntity(eastPos) != null) {
-                BlockEntity powerBlockEntity = level.getBlockEntity(eastPos);
-                assert powerBlockEntity != null;
-                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.WEST).ifPresent(handler -> {
-                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
-                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
-                    }
-                });
-            }
-        }
 
-        if (level.getBlockState(westPos).getBlock() != Blocks.AIR) {
-            if(level.getBlockEntity(westPos) != null) {
-                BlockEntity powerBlockEntity = level.getBlockEntity(westPos);
-                assert powerBlockEntity != null;
-                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.EAST).ifPresent(handler -> {
-                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
-                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
-                    }
-                });
+            if (level.getBlockState(northPos).getBlock() != Blocks.AIR) {
+                if (level.getBlockEntity(northPos) != null) {
+                    BlockEntity powerBlockEntity = level.getBlockEntity(northPos);
+                    assert powerBlockEntity != null;
+                    powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.SOUTH).ifPresent(handler -> {
+                        if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                            handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(maxTransferPerTick, false), false);
+                        }
+                    });
+                }
             }
-        }
 
-        if (level.getBlockState(northPos).getBlock() != Blocks.AIR) {
-            if(level.getBlockEntity(northPos) != null) {
-                BlockEntity powerBlockEntity = level.getBlockEntity(northPos);
-                assert powerBlockEntity != null;
-                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.SOUTH).ifPresent(handler -> {
-                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
-                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
-                    }
-                });
+            if (level.getBlockState(southPos).getBlock() != Blocks.AIR) {
+                if (level.getBlockEntity(southPos) != null) {
+                    BlockEntity powerBlockEntity = level.getBlockEntity(southPos);
+                    assert powerBlockEntity != null;
+                    powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.NORTH).ifPresent(handler -> {
+                        if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                            handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(maxTransferPerTick, false), false);
+                        }
+                    });
+                }
             }
-        }
-
-        if (level.getBlockState(southPos).getBlock() != Blocks.AIR) {
-            if(level.getBlockEntity(southPos) != null) {
-                BlockEntity powerBlockEntity = level.getBlockEntity(southPos);
-                assert powerBlockEntity != null;
-                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.NORTH).ifPresent(handler -> {
-                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
-                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
-                    }
-                });
-            }
-        }
 
     }
 

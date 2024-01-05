@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -18,6 +19,7 @@ public class MultiBlockManagers {
 
     static {
 
+        // Furnace Generator
         POWER_MULTIBLOCKS.register("infinity:furnace_generator",
                 Generators.FURNACE,
                 BlockPatternBuilder.start()
@@ -28,6 +30,7 @@ public class MultiBlockManagers {
                         .build()
         );
 
+        // Lava Generator
         POWER_MULTIBLOCKS.register("infinity:lava_generator",
                 Generators.LAVA,
                 BlockPatternBuilder.start()
@@ -37,6 +40,25 @@ public class MultiBlockManagers {
                         .build()
         );
 
+        // Steam Generator
+        POWER_MULTIBLOCKS.register("infinity:steam_generator",
+                Generators.STEAM,
+                BlockPatternBuilder.start()
+                        .aisle("   ", " * ", "   ")
+                        .aisle("SSS", "S S", "SSS")
+                        .aisle("   ", "   ", "   ")
+                        .aisle("WWW", "WWW", "WWW")
+                        .aisle("GGG", "GGG", "GGG")
+                        .aisle("CCC", "CCC", "CCC")
+                        .where('S', a -> a.getState().is(Tags.Blocks.STONE))
+                        .where('G', a -> a.getState().is(Tags.Blocks.GLASS))
+                        .where('W', a -> a.getState().is(Blocks.WATER))
+                        .where('C', a -> a.getState().is(Blocks.CAMPFIRE) && a.getState().getValue(BlockStateProperties.LIT))
+                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                        .build()
+        );
+
+        // Gold Generator
         POWER_MULTIBLOCKS.register("infinity:gold_generator",
                 Generators.GOLD,
                 BlockPatternBuilder.start()
@@ -54,42 +76,10 @@ public class MultiBlockManagers {
                         .build()
         );
 
-
-        POWER_MULTIBLOCKS.register("infinity:end_bricks",
-                Generators.END_BRICKS,
-                BlockPatternBuilder.start()
-                        .aisle("       ", "       ","       ","   R   ","       ","       ","       ")
-                        .aisle("R     R", "       ","       ","   *   ","       ","       ","R     R")
-                        .aisle("EEEEEEE", "EEEEEEE","EEEEEEE","EEEEEEE","EEEEEEE","EEEEEEE","EEEEEEE")
-                        .where('0', a -> a.getState().is(Blocks.FURNACE))// && a.getState().getValue(BlockStateProperties.LIT))
-                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
-                        .where('E', a -> a.getState().is(Blocks.END_STONE_BRICKS))
-                        .where('R', a -> a.getState().is(Blocks.END_ROD))
-                        .build()
-        );
-
-
-        POWER_MULTIBLOCKS.register(
-                "infinity:tier_1",
-                Generators.TIER_1,
-                BlockPatternBuilder.start()
-                    //    .aisle("C   C", "     ", "     ", "     ", "C   C")
-                        .aisle("0   0", "     ", "  *  ", "     ", "0   0")
-                        .aisle("00000", "0   0", "0   0", "0   0", "00000")
-                    //    .aisle("0   0", "     ", "     ", "     ", "0   0")
-                 //       .aisle("0   0", "     ", "     ", "     ", "0   0")
-                 //       .aisle("0   0", "     ", "     ", "     ", "0   0")
-                        .where('0', a -> a.getState().is(Blocks.IRON_BLOCK))
-                //        .where('C', a -> a.getState().is(com.benbenlaw.opolisutilities.block.ModBlocks.ENDER_SCRAMBLER.get()))
-
-                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
-             //           .where(' ', a -> a.getState().is(Blocks.AIR))
-                        .build()
-        );
-
+        // Blood Magic
         if (ModList.get().isLoaded("bloodmagic")) {
+            System.out.println("Bloodmagic is loaded");
             Block rune = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("bloodmagic:blankrune"));
-
             POWER_MULTIBLOCKS.register("infinity:blood_magic_generator",
                     Generators.BLOOD_MAGIC_ALTAR,
                     BlockPatternBuilder.start()
@@ -103,31 +93,26 @@ public class MultiBlockManagers {
                             .where('B', a -> a.getState().is(BlockTags.STONE_BRICKS))
                             .build()
             );
-
         }
 
-
-/*
-        POWER_MULTIBLOCKS.register(
-                "infinity:tier_2",
-                Generators.TIER_1,
-                BlockPatternBuilder.start()
-                        .aisle("C   C", "     ", "     ", "     ", "C   C")
-                        .aisle("0   0", "     ", "  *  ", "     ", "0   0")
-                        .aisle("00000", "0   0", "0   0", "0   0", "00000")
-                        .aisle("0   0", "     ", "     ", "     ", "0   0")
-                        .aisle("0   0", "     ", "     ", "     ", "0   0")
-                        .aisle("0   0", "     ", "     ", "     ", "0   0")
-                        .where('0', a -> a.getState().is(Blocks.GOLD_BLOCK))
-                        .where('C', a -> a.getState().is(com.benbenlaw.opolisutilities.block.ModBlocks.ENDER_SCRAMBLER.get()))
-                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
-                        .where(' ', a -> a.getState().is(Blocks.AIR))
-                        .build()
-        );
-
- */
-
-
+        // Stoneopolis Modpack (Remove from 1.21+)
+        Block rainbowBricks = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("stoneopolis:rainbow_bricks"));
+        if (ModList.get().isLoaded("kubejs") && rainbowBricks != null) {
+            POWER_MULTIBLOCKS.register("infinity:stoneopolis_generator",
+                    Generators.STONEOPOLIS,
+                    BlockPatternBuilder.start()
+                            .aisle("       ", " RRRRR ", " R   R ", " R   R ", " R   R ", " RRRRR ", "       ")
+                            .aisle(" RRRRR ", "R     R", "R     R", "R     R", "R     R", "R     R", " RRRRR ")
+                            .aisle(" R   R ", "R     R", "       ", "       ", "       ", "R     R", " R   R ")
+                            .aisle(" R   R ", "R     R", "       ", "   *   ", "       ", "R     R", " R   R ")
+                            .aisle(" R   R ", "R     R", "       ", "       ", "       ", "R     R", " R   R ")
+                            .aisle(" RRRRR ", "R     R", "R     R", "R     R", "R     R", "R     R", " RRRRR ")
+                            .aisle("       ", " RRRRR ", " R   R ", " R   R ", " R   R ", " RRRRR ", "       ")
+                            .where('R', a ->  a.getState().is(rainbowBricks))
+                            .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                            .build()
+            );
+        }
     }
 
 }

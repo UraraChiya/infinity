@@ -1,0 +1,18 @@
+{
+  "type": "infinity:generator",
+  "conditions": [
+      {
+         "type": "forge:not",
+         "value": {
+            "type": "forge:tag_empty",
+            "tag": "stoneopolis:rainbow_color_core"
+         }
+      }
+  ],
+  "pattern": "infinity:stoneopolis_generator",
+  "input": {
+    "item": "stoneopolis:rainbow_color_core"
+  },
+  "fuel_duration": 500,
+  "rf_per_tick": 2000
+}

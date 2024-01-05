@@ -1,0 +1,11 @@
+{
+	"name": "BBL Infinity",
+	"landing_text": "All the information about BBL Infinity.",
+	"model": "patchouli:book_blue",
+	"version": 1,
+	"subtitle": "Multiblock Generators",
+	"show_progress": false,
+	"advancement_namespaces": ["infinity"],
+	"use_resource_pack": true,
+	"creative_tab": "infinity:infinity"
+}
