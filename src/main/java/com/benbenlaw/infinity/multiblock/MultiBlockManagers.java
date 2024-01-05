@@ -1,11 +1,16 @@
 package com.benbenlaw.infinity.multiblock;
 
 import com.benbenlaw.infinity.block.ModBlocks;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class MultiBlockManagers {
 
@@ -81,6 +86,27 @@ public class MultiBlockManagers {
              //           .where(' ', a -> a.getState().is(Blocks.AIR))
                         .build()
         );
+
+        if (ModList.get().isLoaded("bloodmagic")) {
+            Block rune = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("bloodmagic:blankrune"));
+
+            POWER_MULTIBLOCKS.register("infinity:blood_magic_generator",
+                    Generators.BLOOD_MAGIC_ALTAR,
+                    BlockPatternBuilder.start()
+                            .aisle("R     R", "       ", "       ", "       ", "       ", "       ", "R     R")
+                            .aisle("B     B", "       ", "       ", "   *   ", "       ", "       ", "B     B")
+                            .aisle("B     B", "       ", "  UUU  ", "  U U  ", "  UUU  ", "       ", "B     B")
+                            .aisle(" UUUUU ", "U     U", "U     U", "U     U", "U     U", "U     U", " UUUUU ")
+                            .where('U', a ->  a.getState().is(rune))
+                            .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                            .where('R', a -> a.getState().is(Blocks.REDSTONE_BLOCK))
+                            .where('B', a -> a.getState().is(BlockTags.STONE_BRICKS))
+                            .build()
+            );
+
+        }
+
+
 /*
         POWER_MULTIBLOCKS.register(
                 "infinity:tier_2",

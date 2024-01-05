@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:blood_magic_generator",
+  "input": {
+    "item": "minecraft:slime_ball"
+  },
+  "fuel_duration": 300,
+  "rf_per_tick": 50
+}

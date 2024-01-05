@@ -5,5 +5,6 @@ public enum Generators {
     FURNACE,
     LAVA,
     GOLD,
+    BLOOD_MAGIC_ALTAR,
     END_BRICKS
 }

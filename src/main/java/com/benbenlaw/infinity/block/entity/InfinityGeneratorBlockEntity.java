@@ -34,6 +34,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,6 +48,7 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.openal.SOFTDeferredUpdates;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -334,11 +336,91 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         if (progress >= maxProgress) {
             resetGenerator();
         }
-        //rest tick
+        //restet tick
         if (tickCounter >= tickBeforeCheck) {
             tickCounter = 0;
-            System.out.println("resetting tick of generator in " + this.worldPosition + System.nanoTime());
+         //   System.out.println("resetting tick of generator in " + this.worldPosition + System.nanoTime());
         }
+
+        BlockPos abovePos = this.worldPosition.above();
+        BlockPos belowPos = this.worldPosition.below();
+        BlockPos eastPos = this.worldPosition.east();
+        BlockPos westPos = this.worldPosition.west();
+        BlockPos southPos = this.worldPosition.south();
+        BlockPos northPos = this.worldPosition.north();
+        assert level != null;
+
+        if (level.getBlockState(abovePos).getBlock() != Blocks.AIR) {
+            if(level.getBlockEntity(abovePos) != null) {
+                BlockEntity powerBlockEntity = level.getBlockEntity(abovePos);
+                assert powerBlockEntity != null;
+                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.DOWN).ifPresent(handler -> {
+                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
+                    }
+                });
+            }
+        }
+
+        if (level.getBlockState(belowPos).getBlock() != Blocks.AIR) {
+            if(level.getBlockEntity(belowPos) != null) {
+                BlockEntity powerBlockEntity = level.getBlockEntity(belowPos);
+                assert powerBlockEntity != null;
+                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.UP).ifPresent(handler -> {
+                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
+                    }
+                });
+            }
+        }
+        if (level.getBlockState(eastPos).getBlock() != Blocks.AIR) {
+            if(level.getBlockEntity(eastPos) != null) {
+                BlockEntity powerBlockEntity = level.getBlockEntity(eastPos);
+                assert powerBlockEntity != null;
+                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.WEST).ifPresent(handler -> {
+                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
+                    }
+                });
+            }
+        }
+
+        if (level.getBlockState(westPos).getBlock() != Blocks.AIR) {
+            if(level.getBlockEntity(westPos) != null) {
+                BlockEntity powerBlockEntity = level.getBlockEntity(westPos);
+                assert powerBlockEntity != null;
+                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.EAST).ifPresent(handler -> {
+                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
+                    }
+                });
+            }
+        }
+
+        if (level.getBlockState(northPos).getBlock() != Blocks.AIR) {
+            if(level.getBlockEntity(northPos) != null) {
+                BlockEntity powerBlockEntity = level.getBlockEntity(northPos);
+                assert powerBlockEntity != null;
+                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.SOUTH).ifPresent(handler -> {
+                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
+                    }
+                });
+            }
+        }
+
+        if (level.getBlockState(southPos).getBlock() != Blocks.AIR) {
+            if(level.getBlockEntity(southPos) != null) {
+                BlockEntity powerBlockEntity = level.getBlockEntity(southPos);
+                assert powerBlockEntity != null;
+                powerBlockEntity.getCapability(ForgeCapabilities.ENERGY, Direction.NORTH).ifPresent(handler -> {
+                    if (handler.canReceive() && (handler.getMaxEnergyStored() - handler.getEnergyStored()) > ENERGY_STORAGE.getEnergyStored()) {
+                        handler.receiveEnergy(ENERGY_STORAGE.extractEnergy(10000, false), false);
+                    }
+                });
+            }
+        }
+
     }
 
     private void resetGenerator() {
