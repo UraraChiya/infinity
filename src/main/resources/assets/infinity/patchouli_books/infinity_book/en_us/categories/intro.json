@@ -1,6 +1,6 @@
 {
 	"name": "Welcome To BBL Infinity",
 	"description": "This mod adds a range of different multiblock generators to produce power.",
-	"icon": "infinity:heat_core",
+	"icon": "infinity:heat_coil",
 	"sortnum": 1
 }

@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "infinity:block/infinity_generator_vertical",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "infinity:block/infinity_generator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "infinity:block/infinity_generator"
+    },
+    "facing=south": {
+      "model": "infinity:block/infinity_generator",
+      "y": 180
+    },
+    "facing=up": {
+      "model": "infinity:block/infinity_generator_vertical"
+    },
+    "facing=west": {
+      "model": "infinity:block/infinity_generator",
+      "y": 270
+    }
+  }
+}

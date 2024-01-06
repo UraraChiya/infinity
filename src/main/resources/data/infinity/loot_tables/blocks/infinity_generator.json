@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "infinity:collector"
+          "name": "infinity:infinity_generator"
         }
       ],
       "conditions": [

@@ -3,12 +3,12 @@ package com.benbenlaw.infinity.item;
 import com.benbenlaw.infinity.Infinity;
 import com.benbenlaw.infinity.block.ModBlocks;
 import com.benbenlaw.opolisutilities.OpolisUtilities;
-import com.benbenlaw.opolisutilities.item.ModItems;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -23,6 +23,8 @@ public class ModCreativeTab {
             .displayItems((parameters, output) -> {
 
                 output.accept(ModBlocks.INFINITY_GENERATOR.get());
+                output.accept(ModItems.DETECTOR.get());
+                output.accept(ModItems.HEAT_COIL.get());
 
 
             }).build());

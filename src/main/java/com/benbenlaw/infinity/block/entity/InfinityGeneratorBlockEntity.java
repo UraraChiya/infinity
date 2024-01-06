@@ -290,8 +290,6 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
             if (tickCounter % tickBeforeCheck == 0) {
                 var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
 
-                System.out.println("input " + input);
-
                 if (result != null && input == null) {
 
                     String foundPattern = result.ID();

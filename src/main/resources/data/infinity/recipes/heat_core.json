@@ -7,13 +7,13 @@
   ],
   "key": {
     "N": {
-      "tag": "forge:nugget/iron"
+      "tag": "forge:nuggets/iron"
     },
     "C": {
       "tag": "minecraft:coals"
     }
   },
   "result": {
-    "item": "miners:heat_core"
+    "item": "infinity:heat_coil"
   }
 }

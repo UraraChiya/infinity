@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/orientable_vertical",
+  "textures": {
+    "front": "infinity:block/infinity_generator_front",
+    "side": "opolisutilities:block/machine_side"
+  }
+}

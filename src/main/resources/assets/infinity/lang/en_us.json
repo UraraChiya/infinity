@@ -1,4 +1,16 @@
 {
     "itemGroup.infinity": "Infinity",
-    "block.infinity.collector": "Collector"
+    "block.infinity.infinity_generator": "Infinity Generator",
+
+    "item.infinity.detector": "Infinity Generator Structure Detector",
+    "item.infinity.heat_coil": "Heat Coil",
+
+    "jei_pattern.steam_generator": "§l§nSteam Generator",
+    "jei_pattern.lava_generator": "§l§nLava Generator",
+    "jei_pattern.furnace_generator": "§l§nFurnace Generator",
+    "jei_pattern.gold_generator": "§l§nGold Generator",
+    "jei_pattern.stoneopolis_generator": "§l§nStoneopolis Generator",
+    "jei_pattern.stoneopolis_generator": "§l§nStoneopolis Generator",
+    "jei_pattern.blood_magic_generator": "§l§nBlood Magic Generator"
+
 }

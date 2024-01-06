@@ -1,7 +1,7 @@
 {
   "parent": "minecraft:block/orientable",
   "textures": {
-    "front": "infinity:block/collector_front",
+    "front": "infinity:block/infinity_generator_front",
     "side": "opolisutilities:block/machine_side",
     "top": "opolisutilities:block/machine_top"
   }

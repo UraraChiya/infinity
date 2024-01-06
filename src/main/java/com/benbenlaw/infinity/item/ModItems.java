@@ -21,14 +21,10 @@ public class ModItems {
 
     public static final RegistryObject<Item> DETECTOR = ITEMS.register("detector", DetectorItem::new);
 
-    public static final RegistryObject<Item> FURNACE_GENERATOR_CORE = ITEMS.register("furnace_generator_core",
+    public static final RegistryObject<Item> HEAT_COIL = ITEMS.register("heat_coil",
             () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> HEAT_CORE = ITEMS.register("heat_core",
-            () -> new Item(new Item.Properties()));
 
-    public static final RegistryObject<Item> WET_CORE = ITEMS.register("wet_core",
-            () -> new Item(new Item.Properties()));
 
 
 

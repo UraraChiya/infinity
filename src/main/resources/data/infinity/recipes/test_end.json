@@ -1,9 +1,0 @@
-{
-  "type": "infinity:generator",
-  "pattern": "infinity:end_bricks",
-  "input": {
-    "item": "minecraft:nether_star"
-  },
-  "fuel_duration": 10,
-  "rf_per_tick": 10000
-}
