@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:steam_generator",
+  "input": {
+    "item": "infinity:wooden_turbine"
+  },
+  "fuel_duration": 200,
+  "rf_per_tick": 20
+}

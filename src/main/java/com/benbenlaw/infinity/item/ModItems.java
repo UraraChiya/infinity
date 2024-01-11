@@ -24,6 +24,15 @@ public class ModItems {
     public static final RegistryObject<Item> HEAT_COIL = ITEMS.register("heat_coil",
             () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> WOODEN_TURBINE = ITEMS.register("wooden_turbine",
+            () -> new Item(new Item.Properties().durability(64)));
+
+    public static final RegistryObject<Item> IRON_TURBINE = ITEMS.register("iron_turbine",
+            () -> new Item(new Item.Properties().durability(128)));
+
+    public static final RegistryObject<Item> DIAMOND_TURBINE = ITEMS.register("diamond_turbine",
+            () -> new Item(new Item.Properties().durability(256)));
+
 
 
 

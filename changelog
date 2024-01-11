@@ -1,5 +1,30 @@
 Changelog Infinity
 
+//TODO: Better Steam Generators
+//TODO: Book Recipe
+
+2.1.2
+
+Fixed generators confirming structures that are part of other generators
+
+2.1.1
+
+Added turbine recipes
+
+2.1.0
+
+Added wooden turbine item, used in the steam generator
+Infinity Generator will no longer consume items with a durability instead it will deal damage to the item until the durability runs out
+Lava and Steam generator now require source blocks of lava and water respectively to work
+Added Steam Generator and Infinity Generator to guide book
+Added Wooden, Iron, Diamond Turbines currently for the steam generator, coal and charcoal recipe removed
+Changed JEI tab less cluttered and easier to read (still not 100& happy with it)
+Infinity Generator no longer takes power from other blocks
+
+2.0.0
+
+Now a multiblock power mod
+
 1.2.0 (Power Mod)
 
 Removed the collector block

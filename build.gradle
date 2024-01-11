@@ -30,6 +30,9 @@ minecraft {
         client {
             workingDirectory project.file('run')
 
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
 
@@ -97,7 +100,7 @@ repositories {
 dependencies {
 
     //Forge
-    minecraft 'net.minecraftforge:forge:1.20.1-47.1.3'
+    minecraft 'net.minecraftforge:forge:1.20.1-47.2.1'
 
     //Opolis Utilities
 
@@ -115,8 +118,10 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:mekanism-268560:4866575")
     runtimeOnly fg.deobf("curse.maven:mekanism-generators-268566:4866578")
 
+
     //Patchouli
-    //runtimeOnly fg.deobf("curse.maven:patchouli-306770:4888962")
+    runtimeOnly fg.deobf("curse.maven:patchouli-306770:4966125")
+
 }
 
 // Example for how to get properties into the manifest for reading at runtime.

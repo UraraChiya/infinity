@@ -25,6 +25,9 @@ public class ModCreativeTab {
                 output.accept(ModBlocks.INFINITY_GENERATOR.get());
                 output.accept(ModItems.DETECTOR.get());
                 output.accept(ModItems.HEAT_COIL.get());
+                output.accept(ModItems.WOODEN_TURBINE.get());
+                output.accept(ModItems.IRON_TURBINE.get());
+                output.accept(ModItems.DIAMOND_TURBINE.get());
 
 
             }).build());

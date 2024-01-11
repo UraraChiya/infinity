@@ -4,6 +4,9 @@
 
     "item.infinity.detector": "Infinity Generator Structure Detector",
     "item.infinity.heat_coil": "Heat Coil",
+    "item.infinity.wooden_turbine": "Wooden Turbine",
+    "item.infinity.iron_turbine": "Iron Turbine",
+    "item.infinity.diamond_turbine": "Diamond Turbine",
 
     "jei_pattern.steam_generator": "§l§nSteam Generator",
     "jei_pattern.lava_generator": "§l§nLava Generator",

@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fml.ModList;
@@ -35,7 +36,7 @@ public class MultiBlockManagers {
                 Generators.LAVA,
                 BlockPatternBuilder.start()
                         .aisle("LLL", "L*L", "LLL")
-                        .where('L', a -> a.getState().is(Blocks.LAVA))
+                        .where('L', a -> a.getState().getFluidState().is(Fluids.LAVA))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .build()
         );
@@ -52,8 +53,9 @@ public class MultiBlockManagers {
                         .aisle("CCC", "CCC", "CCC")
                         .where('S', a -> a.getState().is(Tags.Blocks.STONE))
                         .where('G', a -> a.getState().is(Tags.Blocks.GLASS))
-                        .where('W', a -> a.getState().is(Blocks.WATER))
+                        .where('W', a -> a.getState().getFluidState().is(Fluids.WATER))
                         .where('C', a -> a.getState().is(Blocks.CAMPFIRE) && a.getState().getValue(BlockStateProperties.LIT))
+                        .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .build()
         );
@@ -72,6 +74,7 @@ public class MultiBlockManagers {
                         .aisle("    G    ", "   GGG   ", "    G    ")
                         .aisle("         ", "    G    ", "         ")
                         .where('G', a -> a.getState().is(Blocks.GOLD_BLOCK))
+                        .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .build()
         );
@@ -90,6 +93,7 @@ public class MultiBlockManagers {
                             .where('U', a ->  a.getState().is(rune))
                             .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                             .where('R', a -> a.getState().is(Blocks.REDSTONE_BLOCK))
+                            .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                             .where('B', a -> a.getState().is(BlockTags.STONE_BRICKS))
                             .build()
             );
@@ -108,7 +112,8 @@ public class MultiBlockManagers {
                             .aisle(" R   R ", "R     R", "       ", "       ", "       ", "R     R", " R   R ")
                             .aisle(" RRRRR ", "R     R", "R     R", "R     R", "R     R", "R     R", " RRRRR ")
                             .aisle("       ", " RRRRR ", " R   R ", " R   R ", " R   R ", " RRRRR ", "       ")
-                            .where('R', a ->  a.getState().is(rainbowBricks))
+                            .where('R', a -> a.getState().is(rainbowBricks))
+                            .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                             .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                             .build()
             );

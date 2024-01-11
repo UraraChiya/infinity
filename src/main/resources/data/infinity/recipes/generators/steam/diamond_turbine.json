@@ -2,8 +2,8 @@
   "type": "infinity:generator",
   "pattern": "infinity:steam_generator",
   "input": {
-    "item": "minecraft:charcoal"
+    "item": "infinity:diamond_turbine"
   },
-  "fuel_duration": 1600,
-  "rf_per_tick": 25
+  "fuel_duration": 400,
+  "rf_per_tick": 40
 }

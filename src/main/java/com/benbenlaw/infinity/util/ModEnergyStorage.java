@@ -1,5 +1,6 @@
 package com.benbenlaw.infinity.util;
 
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.energy.EnergyStorage;
 
 public abstract class ModEnergyStorage extends EnergyStorage {
@@ -30,6 +31,25 @@ public abstract class ModEnergyStorage extends EnergyStorage {
     public int setEnergy(int energy) {
         this.energy = energy;
         return energy;
+    }
+
+    @Override
+    public boolean canExtract() {
+        return true;
+    }
+
+    @Override
+    public boolean canReceive() {
+        return true ;
+    }
+
+    public int forceReceiveEnergy(int maxReceive, boolean simulate) {
+        int energyReceived = Math.min(capacity - energy, maxReceive);
+        if (!simulate) {
+            energy += energyReceived;
+        }
+        onEnergyChanged();
+        return energyReceived;
     }
 
     public abstract void onEnergyChanged();

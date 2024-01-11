@@ -1,6 +1,6 @@
 {
     "name": "Furnace Generator",
-    "icon": "minecraft:textures/block/furnace.png",
+    "icon": "minecraft:textures/block/furnace_front_on.png",
     "category": "infinity:multiblocks",
     "sortnum": 1,
     "pages": [

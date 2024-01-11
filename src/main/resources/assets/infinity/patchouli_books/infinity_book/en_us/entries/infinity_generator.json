@@ -1,0 +1,13 @@
+{
+    "name": "Infinity Generator",
+    "icon": "infinity:textures/block/infinity_generator_front.png",
+    "category": "infinity:multiblocks",
+    "sortnum": 2,
+    "pages": [
+        {
+            "type": "spotlight",
+            "item": "infinity:infinity_generator",
+            "text": "The Infinity Generator is the Heart of all the Multi-Block Structures in the mod.$(br2)This is where the RF will be stored and where you extract RF from.$(br2)This is also where items needed for your generators will go."
+        }
+    ]
+}
