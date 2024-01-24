@@ -3,27 +3,25 @@ package com.benbenlaw.infinity.multiblock;
 import com.benbenlaw.infinity.block.ModBlocks;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.mangorage.mangomultiblock.core.SimpleMultiBlockPattern;
 
 public class MultiBlockManagers {
 
     public static final MultiBlockManagerBeta<Generators> POWER_MULTIBLOCKS = new MultiBlockManagerBeta<>();
-
+    
     static {
 
         // Furnace Generator
         POWER_MULTIBLOCKS.register("infinity:furnace_generator",
                 Generators.FURNACE,
-                BlockPatternBuilder.start()
+                SimpleMultiBlockPattern.AisleBuilder.start()
                         .aisle("W0W", "0*0", "W0W")
                         .where('0', a -> a.getState().is(Blocks.FURNACE) && a.getState().getValue(BlockStateProperties.LIT))
                         .where('W', a -> a.getState().is(BlockTags.WALLS))
@@ -34,7 +32,7 @@ public class MultiBlockManagers {
         // Lava Generator
         POWER_MULTIBLOCKS.register("infinity:lava_generator",
                 Generators.LAVA,
-                BlockPatternBuilder.start()
+                SimpleMultiBlockPattern.AisleBuilder.start()
                         .aisle("LLL", "L*L", "LLL")
                         .where('L', a -> a.getState().getFluidState().is(Fluids.LAVA))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
@@ -44,7 +42,7 @@ public class MultiBlockManagers {
         // Steam Generator
         POWER_MULTIBLOCKS.register("infinity:steam_generator",
                 Generators.STEAM,
-                BlockPatternBuilder.start()
+                SimpleMultiBlockPattern.AisleBuilder.start()
                         .aisle("   ", " * ", "   ")
                         .aisle("SSS", "S S", "SSS")
                         .aisle("   ", "   ", "   ")
@@ -63,7 +61,7 @@ public class MultiBlockManagers {
         // Gold Generator
         POWER_MULTIBLOCKS.register("infinity:gold_generator",
                 Generators.GOLD,
-                BlockPatternBuilder.start()
+                SimpleMultiBlockPattern.AisleBuilder.start()
                         .aisle("         ", "    G    ", "         ")
                         .aisle("    G    ", "   GGG   ", "    G    ")
                         .aisle("         ", "    G    ", "         ")
@@ -85,7 +83,7 @@ public class MultiBlockManagers {
             Block rune = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("bloodmagic:blankrune"));
             POWER_MULTIBLOCKS.register("infinity:blood_magic_generator",
                     Generators.BLOOD_MAGIC_ALTAR,
-                    BlockPatternBuilder.start()
+                    SimpleMultiBlockPattern.AisleBuilder.start()
                             .aisle("R     R", "       ", "       ", "       ", "       ", "       ", "R     R")
                             .aisle("B     B", "       ", "       ", "   *   ", "       ", "       ", "B     B")
                             .aisle("B     B", "       ", "  UUU  ", "  U U  ", "  UUU  ", "       ", "B     B")
@@ -104,7 +102,7 @@ public class MultiBlockManagers {
         if (ModList.get().isLoaded("kubejs") && rainbowBricks != null) {
             POWER_MULTIBLOCKS.register("infinity:stoneopolis_generator",
                     Generators.STONEOPOLIS,
-                    BlockPatternBuilder.start()
+                    SimpleMultiBlockPattern.AisleBuilder.start()
                             .aisle("       ", " RRRRR ", " R   R ", " R   R ", " R   R ", " RRRRR ", "       ")
                             .aisle(" RRRRR ", "R     R", "R     R", "R     R", "R     R", "R     R", " RRRRR ")
                             .aisle(" R   R ", "R     R", "       ", "       ", "       ", "R     R", " R   R ")
