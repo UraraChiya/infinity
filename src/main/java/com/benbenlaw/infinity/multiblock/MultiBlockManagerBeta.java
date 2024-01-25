@@ -2,6 +2,7 @@ package com.benbenlaw.infinity.multiblock;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import org.mangorage.mangomultiblock.core.IMultiBlockPattern;
 
@@ -17,9 +18,9 @@ public class MultiBlockManagerBeta<T> {
         structures.add(new ModBlockPattern<>(ID, data, blockPattern));
     }
 
-    public ModBlockPattern<T> findStructure(Level level, BlockPos pos) {
+    public ModBlockPattern<T> findStructure(Level level, BlockPos pos, Rotation rotation) {
         for (ModBlockPattern<T> structure : structures) {
-            var result = structure.structure().matches(level, pos);
+            var result = structure.structure().matches(level, pos, rotation);
             if (result) return structure;
         }
         return null;

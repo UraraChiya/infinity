@@ -38,6 +38,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,6 +60,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.benbenlaw.infinity.block.custom.InfinityGeneratorBlock.FACING;
 import static com.benbenlaw.opolisutilities.block.custom.DryingTableBlock.WATERLOGGED;
 
 public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuProvider, IInventoryHandlingBlockEntity {
@@ -310,8 +312,25 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
         tickCounter++;
 
+
         if (tickCounter % tickBeforeCheck == 0) {
-            var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+
+            Direction direction = this.getBlockState().getValue(InfinityGeneratorBlock.FACING);
+            Rotation rotation = null;
+            if (direction == Direction.DOWN || direction == Direction.UP || direction == Direction.NORTH) {
+                rotation = Rotation.NONE;
+            }
+            if (direction == Direction.SOUTH ) {
+                rotation = Rotation.CLOCKWISE_180;
+            }
+            if (direction == Direction.EAST) {
+                rotation = Rotation.CLOCKWISE_90;
+            }
+            if (direction == Direction.WEST) {
+                rotation = Rotation.COUNTERCLOCKWISE_90;
+            }
+
+            var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition, rotation);
 
             if (result != null && input == null) {
 
@@ -371,7 +390,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
             level.playSound(null, this.worldPosition, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3F, 4.0F / (level.random.nextFloat() * 0.4F + 0.8F));
 
             if (tickCounter % tickBeforeCheck == 0) {
-                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition, Rotation.NONE);
                 if (result == null) {
                     resetGenerator();
                     return;

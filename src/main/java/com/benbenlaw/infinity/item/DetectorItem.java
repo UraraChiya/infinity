@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.block.Rotation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -23,21 +24,29 @@ public class DetectorItem extends Item {
             var player = context.getPlayer();
 
             if (level.getBlockState(pos).is(ModBlocks.INFINITY_GENERATOR.get())) {
-
                 if (player != null) {
-                    var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, pos);
-                    if (result != null) {
-                        player.sendSystemMessage(Component.literal("Found Structure : %s".formatted(result.ID())));
+                    boolean structureFound = false;
 
-                    } else {
+                    // Iterate over each rotation
+                    for (Rotation rotation : Rotation.values()) {
+                        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, pos, rotation);
+                        if (result != null) {
+                            player.sendSystemMessage(Component.literal("Found Structure : %s (Rotation: %s)".formatted(result.ID(), rotation.toString())));
+                            structureFound = true;
+                            break; // Exit loop if structure is found
+                        }
+                    }
+
+                    if (!structureFound) {
                         player.sendSystemMessage(Component.literal("Found no structure!"));
                     }
                 }
             } else {
                 assert player != null;
-                player.sendSystemMessage(Component.literal("Right click on a Infinity Generator to check structure!"));
+                player.sendSystemMessage(Component.literal("Right click on an Infinity Generator to check structure!"));
             }
         }
         return super.useOn(context);
     }
+
 }
