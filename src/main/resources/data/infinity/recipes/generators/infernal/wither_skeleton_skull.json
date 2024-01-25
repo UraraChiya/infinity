@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:infernal_generator",
+  "input": {
+    "item": "minecraft:wither_skeleton_skull"
+  },
+  "fuel_duration": 1600,
+  "rf_per_tick": 400
+}

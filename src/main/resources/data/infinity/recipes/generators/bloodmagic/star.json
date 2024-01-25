@@ -1,0 +1,15 @@
+{
+  "type": "infinity:generator",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "extendedcrafting"
+    }
+  ],
+  "pattern": "infinity:extended_crafting_generator",
+  "input": {
+    "item": "minecraft:nether_star"
+  },
+  "fuel_duration": 1000,
+  "rf_per_tick": 45000
+}

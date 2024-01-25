@@ -3,6 +3,23 @@ Changelog Infinity
 //TODO: Better Steam Generators
 //TODO: Book Recipe
 
+2.2.0
+
+Moved to mangomultiblock mod as dependency
+Fixed various issues with generators not working and working in the wrong places
+Added a new generator, the Infernal Generator, it uses nether mob drops to produce power
+
+2.1.4
+
+Fixed gold ingot recipe
+
+2.1.3
+
+Added Extended Crafting Star Generator, uses nether stars to produce power
+Increased buffer of infinity generator to 100 million instead of 1 million
+Partially fixed generators that are to close to all ready existing generators thinking there part of the generator and producing energy
+Gold Generator changed uses less blocks now, gold ingot recipe produces less power
+
 2.1.2
 
 Fixed generators confirming structures that are part of other generators

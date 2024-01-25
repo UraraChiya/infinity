@@ -1,6 +1,7 @@
 package com.benbenlaw.infinity.screen;
 
 import com.benbenlaw.infinity.Infinity;
+import com.benbenlaw.infinity.recipe.GeneratorRecipe;
 import com.benbenlaw.infinity.util.MouseUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -40,6 +41,9 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
 
         renderEnergyAreaTooltip(guiGraphics, pMouseX, pMouseY, x, y);
         renderInformationTooltip(guiGraphics, pMouseX, pMouseY, x, y);
+
+        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
+        //guiGraphics.drawString(this.font, Component.translatable("jei_pattern." + id), this.titleLabelX + 7, this.titleLabelY + 10, 4210752, false);
     }
 
     private void renderEnergyAreaTooltip(GuiGraphics guiGraphics, int pMouseX, int pMouseY, int x, int y) {
@@ -76,8 +80,6 @@ public class InfinityGeneratorScreen extends AbstractContainerScreen<InfinityGen
         int y = (height - imageHeight) / 2;
 
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
-
-      //  renderProgressArrow(guiGraphics, x, y);
 
         energyInfoArea.render(guiGraphics);
     }

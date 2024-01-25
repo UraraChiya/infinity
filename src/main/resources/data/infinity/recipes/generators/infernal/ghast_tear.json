@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:infernal_generator",
+  "input": {
+    "item": "minecraft:ghast_tear"
+  },
+  "fuel_duration": 800,
+  "rf_per_tick": 400
+}

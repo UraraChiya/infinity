@@ -5,6 +5,8 @@ public enum Generators {
     LAVA, // Vanilla
     GOLD, // Vanilla
     BLOOD_MAGIC_ALTAR, // Blood Magic Mod
+    EXTENDED_CRAFTING_STAR, // Blood Magic Mod
     STONEOPOLIS, //Stoneopolis Modpack
-    STEAM // Vanilla
+    STEAM, // Vanilla
+    INFERNAL // Vanilla
 }

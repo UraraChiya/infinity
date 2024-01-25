@@ -77,6 +77,25 @@ public class MultiBlockManagers {
                         .build()
         );
 
+        // Infernal Generator
+
+        POWER_MULTIBLOCKS.register("infinity:infernal_generator",
+                Generators.INFERNAL,
+                SimpleMultiBlockPattern.AisleBuilder.start()
+                        .aisle("BBBBBBB", "B     B", "B     B", "B     B", "B     B", "B     B", "BBBBBBB")
+                        .aisle("BFB BFB", "F     F", "B     B", "       ", "B     B", "F     F", "BFB BFB")
+                        .aisle("BFB BFB", "F     F", "B     B", "       ", "B     B", "F     F", "BFB BFB")
+                        .aisle("BFB BFB", "F     F", "B     B", "   *   ", "B     B", "F     F", "BFB BFB")
+                        .aisle("BBBBBBB", "BBBBBBB", "BBLLLBB", "BBLLLBB", "BBLLLBB", "BBBBBBB", "BBBBBBB")
+                        .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                        .where('B', a -> a.getState().is(Blocks.NETHER_BRICKS))
+                        .where('L', a -> a.getState().getFluidState().is(Fluids.LAVA))
+                        .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                        .where('F', a -> a.getState().is(Blocks.NETHER_BRICK_FENCE))
+                        .build()
+        );
+
+
         // Blood Magic
         if (ModList.get().isLoaded("bloodmagic")) {
             System.out.println("Bloodmagic is loaded");

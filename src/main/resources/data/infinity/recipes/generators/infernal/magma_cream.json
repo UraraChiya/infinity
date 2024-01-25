@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:infernal_generator",
+  "input": {
+    "item": "minecraft:magma_cream"
+  },
+  "fuel_duration": 200,
+  "rf_per_tick": 400
+}

@@ -106,8 +106,8 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
     public final ModEnergyStorage ENERGY_STORAGE = createEnergyStorage();
     public int RFPerTick;
     public int fuelDuration = 0;
-    final int maxEnergyStorage = 1000000;
-    final int maxEnergyTransfer = 1000000;
+    final int maxEnergyStorage = 100000000;
+    final int maxEnergyTransfer = 100000000;
     public int maxTransferPerTick = 0;
     public boolean hasStructure;
     public boolean hasFuel;
@@ -307,10 +307,11 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
     public void tick() {
 
+
         tickCounter++;
 
         if (tickCounter % tickBeforeCheck == 0) {
-            var result = MultiBlockManagers .POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
+            var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition);
 
             if (result != null && input == null) {
 
@@ -394,6 +395,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
 
     }
 
+
     private void pushEnergy() {
         assert level != null;
 
@@ -430,11 +432,14 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         }
     }
 
+
+
     private void resetGenerator() {
         this.maxProgress = 0;
         this.progress = 0;
         this.RFPerTick = 0;
         input = null;
+        assert this.level != null;
         setChanged(this.level, this.worldPosition, this.getBlockState());
     }
 

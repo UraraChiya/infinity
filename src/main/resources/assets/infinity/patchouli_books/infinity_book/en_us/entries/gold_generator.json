@@ -13,15 +13,9 @@
              "name": "Gold Generator",
              "multiblock": {
                  "pattern": [
-                    ["         ", "    G    ", "         "],
-                    ["    G    ", "   GGG   ", "    G    "],
-                    ["         ", "    G    ", "         "],
-                    ["         ", " G     G ", "         "],
-                    [" G     G ", "GGG 0 GGG", " G     G "],
-                    ["         ", " G     G ", "         "],
-                    ["         ", "    G    ", "         "],
-                    ["    G    ", "   GGG   ", "    G    "],
-                    ["         ", "    G    ", "         "]
+                    ["GGG", "GGG", "GGG"],
+                    ["G G", " 0 ", "G G"],
+                    ["GGG", "GGG", "GGG"]
                  ],
              "mapping": {
                  "G": "minecraft:gold_block",

@@ -1,0 +1,32 @@
+{
+    "name": "Extended Crafting Generator",
+    "icon": "extendedcrafting:textures/block/ender_star_block.png",
+    "category": "infinity:multiblocks_mods",
+    "flag":"mod:extendedcrafting",
+    "sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Extended Crafting Star Generator uses Nether Stars to produce RF.$(br2)Requires items inside the Infinity Generator!$(br2)You must have Extended Crafting installed to use this Multi-Block.$(br2)JEI will show what fuels are allowed in the Extended Crafting Generator."
+        },
+        {
+             "type": "multiblock",
+             "name": "Star Generator",
+             "multiblock": {
+                 "pattern": [
+                     ["E F E", "     ", "F   F", "     ", "E F E"],
+                     ["GRHRG", "RRRRR", "HR0RH", "RRRRR", "GRHRG"]
+                 ],
+             "mapping": {
+                 "E": "extendedcrafting:ender_alternator",
+                 "F": "extendedcrafting:flux_alternator",
+                 "G": "extendedcrafting:ender_star_block",
+                 "H": "extendedcrafting:flux_star_block",
+                 "R": "extendedcrafting:redstone_ingot_block",
+                 "0": "infinity:infinity_generator"
+                 }
+             },
+             "text": "Extended Crafting Generator"
+        }
+    ]
+}

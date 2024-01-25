@@ -1,0 +1,9 @@
+{
+  "type": "infinity:generator",
+  "pattern": "infinity:infernal_generator",
+  "input": {
+    "item": "minecraft:blaze_rod"
+  },
+  "fuel_duration": 600,
+  "rf_per_tick": 200
+}
