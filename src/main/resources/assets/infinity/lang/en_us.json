@@ -16,7 +16,8 @@
     "jei_pattern.stoneopolis_generator": "§l§nStoneopolis Generator",
     "jei_pattern.blood_magic_generator": "§l§nBlood Magic Generator",
     "jei_pattern.extended_crafting_generator": "§l§nStar Generator",
-    "jei_pattern.infernal_generator": "§l§nInfernal Generator"
+    "jei_pattern.infernal_generator": "§l§nInfernal Generator",
+    "jei_pattern.ae2_generator": "§l§nAE2 Generator"
 
 
 }

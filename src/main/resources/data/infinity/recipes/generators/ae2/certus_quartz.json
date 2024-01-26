@@ -1,0 +1,15 @@
+{
+  "type": "infinity:generator",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "ae2"
+    }
+  ],
+  "pattern": "infinity:ae2_generator",
+  "input": {
+    "item": "ae2:certus_quartz_crystal"
+  },
+  "fuel_duration": 800,
+  "rf_per_tick": 460
+}

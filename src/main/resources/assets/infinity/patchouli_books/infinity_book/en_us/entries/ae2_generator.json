@@ -1,0 +1,35 @@
+{
+    "name": "AE2 Generator",
+    "icon": "ae2:textures/block/controller.png",
+    "category": "infinity:multiblocks_mods",
+    "flag":"mod:ae2",
+    "sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The AE2 Generator uses Certus to produce RF.$(br2)Requires items inside the Infinity Generator!$(br2)You must have AE2 installed to use this Multi-Block.$(br2)JEI will show what fuels are allowed in the AE2 Generator."
+        },
+        {
+             "type": "multiblock",
+             "name": "AE2 Generator",
+             "multiblock": {
+                 "pattern": [
+                     ["CAAAC", "A   A", "A 0 A", "A   A", "CAAAC"],
+                     ["A   A", " TTT ", " TPT ", " TTT ", "A   A"],
+                     ["A   A", " TQT ", " Q Q ", " TQT ", "A   A"],
+                     ["A   A", " TTT ", " TQT ", " TTT ", "A   A"],
+                     ["CAAAC", "A   A", "A   A", "A   A", "CAAAC"]
+                 ],
+             "mapping": {
+                 "C": "ae2:quartz_block",
+                 "A": "ae2:spatial_pylon",
+                 "T": "ae2:controller",
+                 "Q": "ae2:quartz_vibrant_glass",
+                 "P": "ae2:energy_acceptor",
+                 "0": "infinity:infinity_generator"
+                 }
+             },
+             "text": "AE2 Generator"
+        }
+    ]
+}

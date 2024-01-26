@@ -1,13 +1,18 @@
 package com.benbenlaw.infinity.item;
 
 import com.benbenlaw.infinity.block.ModBlocks;
+import com.benbenlaw.infinity.block.custom.InfinityGeneratorBlock;
 import com.benbenlaw.infinity.multiblock.MultiBlockManagers;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Rotation;
 import org.jetbrains.annotations.NotNull;
+import org.mangorage.mangomultiblock.core.Util;
 
 import java.util.Arrays;
 
@@ -27,18 +32,21 @@ public class DetectorItem extends Item {
                 if (player != null) {
                     boolean structureFound = false;
 
+                    Direction direction = level.getBlockState(pos).getValue(InfinityGeneratorBlock.FACING);
+                    Rotation rotation = Util.DirectionToRotation(direction);
+
                     // Iterate over each rotation
-                    for (Rotation rotation : Rotation.values()) {
-                        var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, pos, rotation);
-                        if (result != null) {
-                            player.sendSystemMessage(Component.literal("Found Structure : %s (Rotation: %s)".formatted(result.ID(), rotation.toString())));
-                            structureFound = true;
-                            break; // Exit loop if structure is found
-                        }
+                    var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, pos, rotation);
+                    if (result != null) {
+
+                        String id = result.ID().replace("infinity:", "");
+                        MutableComponent translatedID = Component.translatable("jei_pattern." + id);
+                        player.sendSystemMessage(Component.literal("Found Pattern: " + translatedID.getString()).withStyle(ChatFormatting.GREEN));
+                        structureFound = true;
                     }
 
                     if (!structureFound) {
-                        player.sendSystemMessage(Component.literal("Found no structure!"));
+                        player.sendSystemMessage(Component.literal("Found Pattern: None, Check Your Structure!").withStyle(ChatFormatting.RED));
                     }
                 }
             } else {

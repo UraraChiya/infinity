@@ -1,8 +1,11 @@
 package com.benbenlaw.infinity.multiblock;
 
 import com.benbenlaw.infinity.block.ModBlocks;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -62,15 +65,15 @@ public class MultiBlockManagers {
         POWER_MULTIBLOCKS.register("infinity:gold_generator",
                 Generators.GOLD,
                 SimpleMultiBlockPattern.AisleBuilder.start()
-                        .aisle("         ", "    G    ", "         ")
-                        .aisle("    G    ", "   GGG   ", "    G    ")
-                        .aisle("         ", "    G    ", "         ")
-                        .aisle("         ", " G     G ", "         ")
-                        .aisle(" G     G ", "GGG * GGG", " G     G ")
-                        .aisle("         ", " G     G ", "         ")
-                        .aisle("         ", "    G    ", "         ")
-                        .aisle("    G    ", "   GGG   ", "    G    ")
-                        .aisle("         ", "    G    ", "         ")
+                        .aisle("   ", "   ", "   ", "   ", " G ", "   ", "   ", "   ", "   ")
+                        .aisle("   ", "   ", "   ", " G ", "GGG", " G ", "   ", "   ", "   ")
+                        .aisle("   ", "   ", "   ", "   ", " G ", "   ", "   ", "   ", "   ")
+                        .aisle("   ", " G ", "   ", "   ", "   ", "   ", "   ", " G ", "   ")
+                        .aisle(" G ", "GGG", " G ", "   ", " * ", "   ", " G ", "GGG", " G ")
+                        .aisle("   ", " G ", "   ", "   ", "   ", "   ", "   ", " G ", "   ")
+                        .aisle("   ", "   ", "   ", "   ", " G ", "   ", "   ", "   ", "   ")
+                        .aisle("   ", "   ", "   ", " G ", "GGG", " G ", "   ", "   ", "   ")
+                        .aisle("   ", "   ", "   ", "   ", " G ", "   ", "   ", "   ", "   ")
                         .where('G', a -> a.getState().is(Blocks.GOLD_BLOCK))
                         .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
@@ -112,6 +115,36 @@ public class MultiBlockManagers {
                             .where('R', a -> a.getState().is(Blocks.REDSTONE_BLOCK))
                             .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                             .where('B', a -> a.getState().is(BlockTags.STONE_BRICKS))
+                            .build()
+            );
+        }
+
+        // AE2
+        if (ModList.get().isLoaded("ae2")) {
+            System.out.println("Applied Energetics 2 is loaded");
+
+         //   TagKey<Block> certusBlock = BlockTags.create(new ResourceLocation("forge:storage_blocks/certus_quartz"));
+            Block certusBlock = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("ae2:quartz_block"));
+            Block spatialAnchor = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("ae2:spatial_pylon"));
+            Block quartzGlass = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("ae2:quartz_vibrant_glass"));
+            Block controller = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("ae2:controller"));
+            Block acceptor = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("ae2:energy_acceptor"));
+
+            POWER_MULTIBLOCKS.register("infinity:ae2_generator",
+                    Generators.AE2,
+                    SimpleMultiBlockPattern.AisleBuilder.start()
+                            .aisle("CAAAC", "A   A", "A * A", "A   A", "CAAAC")
+                            .aisle("A   A", " TTT ", " TPT ", " TTT ", "A   A")
+                            .aisle("A   A", " TQT ", " Q Q ", " TQT ", "A   A")
+                            .aisle("A   A", " TTT ", " TQT ", " TTT ", "A   A")
+                            .aisle("CAAAC", "A   A", "A   A", "A   A", "CAAAC")
+                            .where('C', a -> a.getState().is(certusBlock))
+                            .where('A', a -> a.getState().is(spatialAnchor))
+                            .where('T', a -> a.getState().is(controller))
+                            .where('Q', a -> a.getState().is(quartzGlass))
+                            .where('P', a -> a.getState().is(acceptor))
+                            .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
+                            .where(' ', a -> !a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
                             .build()
             );
         }

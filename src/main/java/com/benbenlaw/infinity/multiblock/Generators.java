@@ -8,5 +8,6 @@ public enum Generators {
     EXTENDED_CRAFTING_STAR, // Blood Magic Mod
     STONEOPOLIS, //Stoneopolis Modpack
     STEAM, // Vanilla
-    INFERNAL // Vanilla
+    INFERNAL, // Vanilla
+    AE2 // Applied Energetics 2
 }

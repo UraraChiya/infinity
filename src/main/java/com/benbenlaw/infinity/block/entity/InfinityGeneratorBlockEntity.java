@@ -53,6 +53,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.openal.SOFTDeferredUpdates;
+import org.mangorage.mangomultiblock.core.Util;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -316,19 +317,7 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
         if (tickCounter % tickBeforeCheck == 0) {
 
             Direction direction = this.getBlockState().getValue(InfinityGeneratorBlock.FACING);
-            Rotation rotation = null;
-            if (direction == Direction.DOWN || direction == Direction.UP || direction == Direction.NORTH) {
-                rotation = Rotation.NONE;
-            }
-            if (direction == Direction.SOUTH ) {
-                rotation = Rotation.CLOCKWISE_180;
-            }
-            if (direction == Direction.EAST) {
-                rotation = Rotation.CLOCKWISE_90;
-            }
-            if (direction == Direction.WEST) {
-                rotation = Rotation.COUNTERCLOCKWISE_90;
-            }
+            Rotation rotation = Util.DirectionToRotation(direction);
 
             var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition, rotation);
 
@@ -390,7 +379,9 @@ public class InfinityGeneratorBlockEntity extends BlockEntity implements MenuPro
             level.playSound(null, this.worldPosition, SoundEvents.BEACON_AMBIENT, SoundSource.BLOCKS, 0.3F, 4.0F / (level.random.nextFloat() * 0.4F + 0.8F));
 
             if (tickCounter % tickBeforeCheck == 0) {
-                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition, Rotation.NONE);
+                Direction direction = this.getBlockState().getValue(InfinityGeneratorBlock.FACING);
+                Rotation rotation = Util.DirectionToRotation(direction);
+                var result = MultiBlockManagers.POWER_MULTIBLOCKS.findStructure(level, this.worldPosition, rotation);
                 if (result == null) {
                     resetGenerator();
                     return;

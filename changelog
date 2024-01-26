@@ -8,6 +8,8 @@ Changelog Infinity
 Moved to mangomultiblock mod as dependency
 Fixed various issues with generators not working and working in the wrong places
 Added a new generator, the Infernal Generator, it uses nether mob drops to produce power
+Support for directional generators
+
 
 2.1.4
 

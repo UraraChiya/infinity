@@ -1,0 +1,32 @@
+{
+    "name": "Infernal Generator",
+    "icon": "minecraft:textures/block/nether_bricks.png",
+    "category": "infinity:multiblocks",
+    "sortnum": 1,
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Infernal Generator uses nether items to produce RF.$(br2)JEI will show what fuels are allowed in the Infernal Generator."
+        },
+        {
+             "type": "multiblock",
+             "name": "Infernal Generator",
+             "multiblock": {
+                 "pattern": [
+                    ["BBBBBBB", "B     B", "B     B", "B     B", "B     B", "B     B", "BBBBBBB"],
+                    ["BFB BFB", "F     F", "B     B", "       ", "B     B", "F     F", "BFB BFB"],
+                    ["BFB BFB", "F     F", "B     B", "       ", "B     B", "F     F", "BFB BFB"],
+                    ["BFB BFB", "F     F", "B     B", "   0   ", "B     B", "F     F", "BFB BFB"],
+                    ["BBBBBBB", "BBBBBBB", "BBLLLBB", "BBLLLBB", "BBLLLBB", "BBBBBBB", "BBBBBBB"]
+                 ],
+             "mapping": {
+                 "B": "minecraft:nether_bricks",
+                 "0": "infinity:infinity_generator",
+                 "F": "minecraft:nether_brick_fence",
+                 "L": "minecraft:lava"
+                 }
+             },
+             "text": "Infernal Generator"
+        }
+    ]
+}
