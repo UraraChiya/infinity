@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
-import org.mangorage.mangomultiblock.core.IMultiBlockPattern;
+import org.mangorage.mangomultiblock.core.impl.IMultiBlockPattern;
 
 import java.util.ArrayList;
 
