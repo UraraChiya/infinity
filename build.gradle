@@ -123,7 +123,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:patchouli-306770:4966125")
 
     // Mango's Multiblock library
-    implementation fg.deobf("curse.maven:mangos-multiblock-library-966061:5055730")
+    implementation fg.deobf("curse.maven:mangos-multiblock-library-966061:5144465")
 
 }
 

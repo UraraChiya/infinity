@@ -53,7 +53,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.openal.SOFTDeferredUpdates;
-import org.mangorage.mangomultiblock.core.Util;
+import org.mangorage.mangomultiblock.core.misc.Util;
 
 import javax.annotation.Nonnull;
 import java.util.Map;

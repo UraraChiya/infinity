@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Rotation;
 import org.jetbrains.annotations.NotNull;
-import org.mangorage.mangomultiblock.core.Util;
+import org.mangorage.mangomultiblock.core.misc.Util;
 
 import java.util.Arrays;
 
