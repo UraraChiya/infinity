@@ -24,7 +24,7 @@ public class MultiBlockManagers {
         // Furnace Generator
         POWER_MULTIBLOCKS.register("infinity:furnace_generator",
                 Generators.FURNACE,
-                SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                SimpleMultiBlockAislePatternBuilder.start()
                         .aisle("W0W", "0*0", "W0W")
                         .where('0', a -> a.getState().is(Blocks.FURNACE) && a.getState().getValue(BlockStateProperties.LIT))
                         .where('W', a -> a.getState().is(BlockTags.WALLS))
@@ -35,7 +35,7 @@ public class MultiBlockManagers {
         // Lava Generator
         POWER_MULTIBLOCKS.register("infinity:lava_generator",
                 Generators.LAVA,
-                SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                SimpleMultiBlockAislePatternBuilder.start()
                         .aisle("LLL", "L*L", "LLL")
                         .where('L', a -> a.getState().getFluidState().is(Fluids.LAVA))
                         .where('*', a -> a.getState().is(ModBlocks.INFINITY_GENERATOR.get()))
@@ -45,7 +45,7 @@ public class MultiBlockManagers {
         // Steam Generator
         POWER_MULTIBLOCKS.register("infinity:steam_generator",
                 Generators.STEAM,
-                SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                SimpleMultiBlockAislePatternBuilder.start()
                         .aisle("   ", " * ", "   ")
                         .aisle("SSS", "S S", "SSS")
                         .aisle("   ", "   ", "   ")
@@ -64,7 +64,7 @@ public class MultiBlockManagers {
         // Gold Generator
         POWER_MULTIBLOCKS.register("infinity:gold_generator",
                 Generators.GOLD,
-                SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                SimpleMultiBlockAislePatternBuilder.start()
                         .aisle("   ", "   ", "   ", "   ", " G ", "   ", "   ", "   ", "   ")
                         .aisle("   ", "   ", "   ", " G ", "GGG", " G ", "   ", "   ", "   ")
                         .aisle("   ", "   ", "   ", "   ", " G ", "   ", "   ", "   ", "   ")
@@ -84,7 +84,7 @@ public class MultiBlockManagers {
 
         POWER_MULTIBLOCKS.register("infinity:infernal_generator",
                 Generators.INFERNAL,
-                SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                SimpleMultiBlockAislePatternBuilder.start()
                         .aisle("BBBBBBB", "B     B", "B     B", "B     B", "B     B", "B     B", "BBBBBBB")
                         .aisle("BFB BFB", "F     F", "B     B", "       ", "B     B", "F     F", "BFB BFB")
                         .aisle("BFB BFB", "F     F", "B     B", "       ", "B     B", "F     F", "BFB BFB")
@@ -105,7 +105,7 @@ public class MultiBlockManagers {
             Block rune = ForgeRegistries.BLOCKS.getValue(new ResourceLocation("bloodmagic:blankrune"));
             POWER_MULTIBLOCKS.register("infinity:blood_magic_generator",
                     Generators.BLOOD_MAGIC_ALTAR,
-                    SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                    SimpleMultiBlockAislePatternBuilder.start()
                             .aisle("R     R", "       ", "       ", "       ", "       ", "       ", "R     R")
                             .aisle("B     B", "       ", "       ", "   *   ", "       ", "       ", "B     B")
                             .aisle("B     B", "       ", "  UUU  ", "  U U  ", "  UUU  ", "       ", "B     B")
@@ -132,7 +132,7 @@ public class MultiBlockManagers {
 
             POWER_MULTIBLOCKS.register("infinity:ae2_generator",
                     Generators.AE2,
-                    SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                    SimpleMultiBlockAislePatternBuilder.start()
                             .aisle("CAAAC", "A   A", "A * A", "A   A", "CAAAC")
                             .aisle("A   A", " TTT ", " TPT ", " TTT ", "A   A")
                             .aisle("A   A", " TQT ", " Q Q ", " TQT ", "A   A")
@@ -154,7 +154,7 @@ public class MultiBlockManagers {
         if (ModList.get().isLoaded("kubejs") && rainbowBricks != null) {
             POWER_MULTIBLOCKS.register("infinity:stoneopolis_generator",
                     Generators.STONEOPOLIS,
-                    SimpleMultiBlockAislePatternBuilder.SimpleMultiBlockAislePatternBuilder.start()
+                    SimpleMultiBlockAislePatternBuilder.start()
                             .aisle("       ", " RRRRR ", " R   R ", " R   R ", " R   R ", " RRRRR ", "       ")
                             .aisle(" RRRRR ", "R     R", "R     R", "R     R", "R     R", "R     R", " RRRRR ")
                             .aisle(" R   R ", "R     R", "       ", "       ", "       ", "R     R", " R   R ")
